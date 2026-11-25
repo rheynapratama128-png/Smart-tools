@@ -36,7 +36,10 @@ const AUDIO_DELIVERY_OPTIONS = [
 const AUDIO_DELIVERY_DEFAULT = 'lipsync';
 const AUDIO_TYPES = ['talking', 'vo', 'none'];
 
-let apiKey = ""; // Diisi otomatis oleh Gemini Canvas; di luar Canvas diisi dari kolom API Key (state manualApiKey, tersimpan di localStorage).
+const apiKey = ""; // Dibiarkan kosong: diisi otomatis oleh Gemini Canvas. Jangan isi manual.
+// Key manual (luar Canvas) disimpan di variabel terpisah supaya key Canvas tidak pernah tertimpa.
+let manualApiKeyValue = "";
+const getApiKey = () => apiKey || manualApiKeyValue;
 const GENERATIVE_MODEL = "gemini-3.1-flash-image";
 const FALLBACK_IMAGE_MODEL = "gemini-2.5-flash-image-preview";
 const TEXT_MODEL = "gemini-2.5-flash-preview-09-2025";
@@ -51,7 +54,7 @@ const IN_CANVAS = (() => { try { return typeof window !== 'undefined' && window.
 // (retry tidak akan menyembuhkannya). 404 model langsung fallback ke model cadangan
 // sekali, tanpa menunggu percobaan terakhir.
 const fetchWithRetry = async (url, options) => {
-  if (!IN_CANVAS && !apiKey && String(url).includes('generativelanguage.googleapis.com')) {
+  if (!IN_CANVAS && !getApiKey() && String(url).includes('generativelanguage.googleapis.com')) {
     throw new Error('Fitur AI ini hanya berjalan di dalam Gemini Canvas, atau isi API Key Gemini di kolom API Key di atas halaman.');
   }
   const delays = [1000, 2000, 4000, 8000, 16000];
@@ -976,7 +979,7 @@ export default function App() {
   // Di dalam Canvas tidak perlu diisi — Canvas mengisi apiKey otomatis.
   const [manualApiKey, setManualApiKey] = useState(() => { try { return localStorage.getItem('stj_api_key') || ''; } catch (e) { return ''; } });
   const [showApiKey, setShowApiKey] = useState(false);
-  useEffect(() => { apiKey = manualApiKey.trim(); try { if (manualApiKey.trim()) localStorage.setItem('stj_api_key', manualApiKey.trim()); else localStorage.removeItem('stj_api_key'); } catch (e) {} }, [manualApiKey]);
+  useEffect(() => { manualApiKeyValue = manualApiKey.trim(); try { if (manualApiKey.trim()) localStorage.setItem('stj_api_key', manualApiKey.trim()); else localStorage.removeItem('stj_api_key'); } catch (e) {} }, [manualApiKey]);
   const [selectedMode, setSelectedMode] = useState(null);
 
   // Data State (Aksara)
@@ -1452,7 +1455,7 @@ export default function App() {
             }
         };
 
-        const response = await fetchWithRetry(`https://generativelanguage.googleapis.com/v1beta/models/${TEXT_MODEL}:generateContent?key=${apiKey}`, {
+        const response = await fetchWithRetry(`https://generativelanguage.googleapis.com/v1beta/models/${TEXT_MODEL}:generateContent?key=${getApiKey()}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
@@ -1507,7 +1510,7 @@ export default function App() {
         const imageBase64 = base64Image.split(',')[1];
         const systemPrompt = `Lihat foto model pada gambar ini. Tugas Anda HANYA mengembalikan JSON valid dengan format: {"gender": "Pria" atau "Wanita", "hair": "...", "outfit": "..."}. Tentukan gender berdasarkan penampilan fisik yang terlihat di foto. "hair": deskripsi rambut sangat ringkas dalam Bahasa Inggris (panjang, model, warna). "outfit": deskripsi pakaian dan aksesori yang terlihat, sangat ringkas dalam Bahasa Inggris. Jangan tambahkan penjelasan apapun di luar JSON.`;
         const payload = { contents: [{ parts: [{ text: systemPrompt }, { inlineData: { mimeType: "image/png", data: imageBase64 } }] }], generationConfig: { responseMimeType: "application/json" } };
-        const response = await fetchWithRetry(`https://generativelanguage.googleapis.com/v1beta/models/${TEXT_MODEL}:generateContent?key=${apiKey}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+        const response = await fetchWithRetry(`https://generativelanguage.googleapis.com/v1beta/models/${TEXT_MODEL}:generateContent?key=${getApiKey()}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
         if (response && response.ok) {
             const result = await response.json();
             const text = result.candidates?.[0]?.content?.parts?.[0]?.text;
@@ -1549,7 +1552,7 @@ export default function App() {
             contents: [{ parts: [{ inlineData: { mimeType: "image/png", data: faceSrc.split(',')[1] } }, { text: lookPrompt }] }],
             generationConfig: { responseModalities: ["IMAGE"], aspectRatio: '9:16' }
         };
-        const response = await fetchWithRetry(`https://generativelanguage.googleapis.com/v1beta/models/${GENERATIVE_MODEL}:generateContent?key=${apiKey}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+        const response = await fetchWithRetry(`https://generativelanguage.googleapis.com/v1beta/models/${GENERATIVE_MODEL}:generateContent?key=${getApiKey()}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
         if (!response || !response.ok) throw new Error(response ? await response.text() : 'No response');
         const result = await response.json();
         const out = result.candidates?.[0]?.content?.parts?.find(p => p.inlineData)?.inlineData?.data;
@@ -1749,7 +1752,7 @@ export default function App() {
           };
 
           try {
-              const response = await fetchWithRetry(`https://generativelanguage.googleapis.com/v1beta/models/${TEXT_MODEL}:generateContent?key=${apiKey}`, {
+              const response = await fetchWithRetry(`https://generativelanguage.googleapis.com/v1beta/models/${TEXT_MODEL}:generateContent?key=${getApiKey()}`, {
                   method: 'POST',
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify(payload)
@@ -1824,7 +1827,7 @@ export default function App() {
       };
 
       try {
-          const response = await fetchWithRetry(`https://generativelanguage.googleapis.com/v1beta/models/${TEXT_MODEL}:generateContent?key=${apiKey}`, {
+          const response = await fetchWithRetry(`https://generativelanguage.googleapis.com/v1beta/models/${TEXT_MODEL}:generateContent?key=${getApiKey()}`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify(payload)
@@ -1922,7 +1925,7 @@ ${structureRules}
 
 FORMAT (persis ${formatLines.length} baris, tanpa markdown, tanpa teks lain):
 ${formatLines.join('\n')}`;
-      const response = await fetchWithRetry(`https://generativelanguage.googleapis.com/v1beta/models/${TEXT_MODEL}:generateContent?key=${apiKey}`, {
+      const response = await fetchWithRetry(`https://generativelanguage.googleapis.com/v1beta/models/${TEXT_MODEL}:generateContent?key=${getApiKey()}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }], generationConfig: { temperature: 1.1 } })
@@ -2314,7 +2317,7 @@ ${formatLines.join('\n')}`;
             generationConfig: { responseModalities: ["IMAGE"], aspectRatio: config.ratio }
           };
 
-          const response = await fetchWithRetry(`https://generativelanguage.googleapis.com/v1beta/models/${GENERATIVE_MODEL}:generateContent?key=${apiKey}`, {
+          const response = await fetchWithRetry(`https://generativelanguage.googleapis.com/v1beta/models/${GENERATIVE_MODEL}:generateContent?key=${getApiKey()}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
@@ -2406,7 +2409,7 @@ ${formatLines.join('\n')}`;
 Instruksi revisi gambar dari user: "${instruction.trim()}"
 Jika instruksi revisi MENGUBAH isi adegan (aksi, pose, ekspresi, framing/jarak kamera, posisi, atau benda yang dipegang/ditampilkan), tulis ulang setiap field agar sesuai dengan revisi, dengan gaya dan panjang yang sama: "action" = 1 kalimat bahasa Inggris (framing + aksi + ekspresi, tanpa deskripsi pakaian/rambut)${fields.direction ? '; "direction" = 2-3 kalimat bahasa Inggris (framing, aksi, ekspresi, gerak kamera)' : ''}; "caption" = 1 kalimat Bahasa Indonesia tanpa dialog. Jika revisi hanya memperbaiki kualitas (cahaya, kemiripan wajah, jari, kulit, label produk, pakaian, ketajaman, warna), jangan ubah apa pun dan isi "changed": false. Jangan menulis kata cahaya atau waktu.
 Kembalikan HANYA JSON: {"changed": true atau false, "action": "...", "caption": "..."${fields.direction ? ', "direction": "..."' : ''}}`;
-      const response = await fetchWithRetry(`https://generativelanguage.googleapis.com/v1beta/models/${TEXT_MODEL}:generateContent?key=${apiKey}`, {
+      const response = await fetchWithRetry(`https://generativelanguage.googleapis.com/v1beta/models/${TEXT_MODEL}:generateContent?key=${getApiKey()}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }], generationConfig: { responseMimeType: 'application/json' } })
@@ -2588,7 +2591,7 @@ Kembalikan HANYA JSON: {"changed": true atau false, "action": "...", "caption": 
         generationConfig: { responseModalities: ["IMAGE"], aspectRatio: config.ratio }
       };
 
-      const response = await fetchWithRetry(`https://generativelanguage.googleapis.com/v1beta/models/${GENERATIVE_MODEL}:generateContent?key=${apiKey}`, {
+      const response = await fetchWithRetry(`https://generativelanguage.googleapis.com/v1beta/models/${GENERATIVE_MODEL}:generateContent?key=${getApiKey()}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
@@ -2976,7 +2979,7 @@ ATURAN:
               contents: [{ parts: [{ text: prompt }] }]
           };
 
-          const response = await fetchWithRetry(`https://generativelanguage.googleapis.com/v1beta/models/${TEXT_MODEL}:generateContent?key=${apiKey}`, {
+          const response = await fetchWithRetry(`https://generativelanguage.googleapis.com/v1beta/models/${TEXT_MODEL}:generateContent?key=${getApiKey()}`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify(payload)
@@ -3020,7 +3023,7 @@ ATURAN:
       };
 
       try {
-          const response = await fetchWithRetry(`https://generativelanguage.googleapis.com/v1beta/models/${TTS_MODEL}:generateContent?key=${apiKey}`, {
+          const response = await fetchWithRetry(`https://generativelanguage.googleapis.com/v1beta/models/${TTS_MODEL}:generateContent?key=${getApiKey()}`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify(payload)
