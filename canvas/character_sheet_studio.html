@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Character Sheet Studio by Jaleee</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef5f7;--s1:#ffffff;--s2:#dcebf0;--tx:#0a2533;--mu:#4b6b79;--ac:#ffc83d;--ac2:#0b7bb5;--on:#0a2533;--ln:rgba(10,37,51,.2);--tag:#0a2533;--tagtx:#ffc83d;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0a2533;--s1:#0f3042;--s2:#164559;--tx:#f3f7f5;--mu:#9db8c4;--ac:#ffc83d;--ac2:#5cc8ff;--on:#0a2533;--ln:rgba(255,200,61,.25);--tag:#ffc83d;--tagtx:#0a2533}}
+:root[data-theme="dark"]{--bg:#0a2533;--s1:#0f3042;--s2:#164559;--tx:#f3f7f5;--mu:#9db8c4;--ac:#ffc83d;--ac2:#5cc8ff;--on:#0a2533;--ln:rgba(255,200,61,.25);--tag:#ffc83d;--tagtx:#0a2533}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:400 16px/1.6 'Figtree',system-ui,sans-serif}
+.wrap{max-width:860px;margin:0 auto;padding:22px 16px 60px}
+header{display:flex;align-items:center;gap:14px;margin-bottom:8px}
+.mark{width:46px;height:46px;border-radius:12px;background:var(--ac);color:var(--on);display:flex;align-items:center;justify-content:center;font:800 26px 'Bricolage Grotesque',sans-serif;box-shadow:4px 4px 0 var(--ac2);flex-shrink:0}
+h1{font:800 clamp(28px,6vw,44px)/1.05 'Bricolage Grotesque',sans-serif;letter-spacing:-.03em;margin:0}
+.sub{color:var(--mu);margin:6px 0 20px;max-width:60ch}
+.flow{display:grid;gap:10px;margin-bottom:22px}
+@media(min-width:640px){.flow{grid-template-columns:repeat(3,1fr)}}
+.flow div{background:var(--s1);border:1px solid var(--ln);border-radius:14px;padding:12px 14px;font-size:14px;color:var(--mu)}
+.flow b{display:block;color:var(--tx);font:700 15px 'Bricolage Grotesque',sans-serif}
+.card{background:var(--s1);border-top:7px solid var(--ac);border-radius:6px 6px 28px 6px;padding:22px 22px 26px;margin-bottom:18px;box-shadow:0 24px 40px -30px rgba(0,0,0,.5)}
+.card:nth-of-type(3n+2){border-top-color:var(--ac2)}
+.card:nth-of-type(3n+3){border-top-color:#ff7a59}
+h2{font:700 21px 'Bricolage Grotesque',sans-serif;margin:0 0 4px;letter-spacing:-.02em}
+.hint{color:var(--mu);font-size:13.5px;margin:0 0 14px}
+.grid{display:grid;gap:16px}
+@media(min-width:640px){.grid.two{grid-template-columns:1fr 1fr}}
+label,.lab{display:flex;align-items:center;gap:8px;font-weight:700;font-size:13px;margin-bottom:2px}
+label::before,.lab::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--ac);flex-shrink:0}
+input[type=text],input[type=number],textarea{width:100%;font:inherit;color:var(--tx);background:transparent;border:0;border-bottom:2px solid var(--ln);padding:10px 2px;border-radius:0;outline:0}
+textarea{background:var(--s2);border:0;border-left:5px solid var(--ac2);border-radius:4px 14px 14px 4px;padding:12px 14px;resize:vertical;line-height:1.6}
+input:focus{border-bottom-color:var(--ac);box-shadow:0 3px 0 0 var(--ac)}
+textarea:focus{border-left-color:var(--ac)}
+::placeholder{color:var(--mu);opacity:.7}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.chip{font:600 14px 'Figtree',sans-serif;border:0;border-radius:999px;padding:9px 16px;background:var(--s2);color:var(--tx);cursor:pointer;min-height:40px}
+.chip[aria-pressed=true]{background:var(--ac2);color:#fff}
+.chip[aria-pressed=true]::after{content:" ✓"}
+.row{display:flex;flex-wrap:wrap;gap:10px;margin:4px 0 20px}
+.btn{font:700 15px 'Figtree',sans-serif;border:0;border-radius:14px;padding:13px 20px;min-height:48px;cursor:pointer;background:var(--ac);color:var(--on);box-shadow:4px 4px 0 var(--ac2);transition:transform .12s,box-shadow .12s}
+.btn:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ac2)}
+.btn:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--ac2)}
+.btn.ghost{background:var(--s1);color:var(--tx);border:1px solid var(--ln);box-shadow:none}
+.btn.ghost:hover{transform:none;box-shadow:none;background:var(--s2)}
+.out{background:var(--s2);border-left:5px solid var(--ac);border-radius:4px 16px 16px 4px;padding:14px 16px;font:13.5px/1.65 ui-monospace,Menlo,Consolas,monospace;white-space:pre-wrap;word-break:break-word;margin:10px 0 0;max-height:360px;overflow:auto}
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.tag{background:var(--tag);color:var(--tagtx);border-radius:6px 14px 14px 6px;padding:3px 12px;font-size:12.5px;font-weight:700}
+.tip{border-left:5px solid var(--ac2);background:var(--s2);border-radius:4px 14px 14px 4px;padding:12px 16px;font-size:14px;margin-top:16px}
+:focus-visible{outline:3px solid var(--ac2);outline-offset:2px}
+.stage{position:relative;background:var(--s2);border-radius:6px 22px 22px 22px;min-height:140px;display:flex;align-items:center;justify-content:center;overflow:hidden;margin-top:6px}
+.stage img{display:block;width:100%;height:auto;max-height:78vh;object-fit:contain}
+.stage .empty{color:var(--mu);font-size:14px;padding:30px 18px;text-align:center}
+.busy{position:absolute;inset:0;background:rgba(10,37,51,.82);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;padding:16px;font-weight:600}
+.spin{width:38px;height:38px;border-radius:50%;border:4px solid rgba(255,255,255,.25);border-top-color:var(--ac);animation:sp 1s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.spin{animation:none}}
+.vers{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 0}
+.err{border-left:5px solid #ff7a59;background:rgba(255,122,89,.12);border-radius:4px 14px 14px 4px;padding:10px 14px;font-size:14px;margin-top:12px}
+.warn{border-left:5px solid #ff7a59;background:var(--s1);border-radius:4px 14px 14px 4px;padding:12px 16px;margin-bottom:18px;font-size:14px}
+.refs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.refs .th{position:relative;width:92px;height:92px;border-radius:16px 16px 16px 4px;overflow:hidden;background:var(--s2)}
+.refs .th img{width:100%;height:100%;object-fit:cover;display:block}
+.refs .th button{position:absolute;top:4px;right:4px;width:28px;height:28px;border:0;border-radius:50%;background:#ff7a59;color:#fff;font-weight:700;cursor:pointer}
+details{margin-top:14px}summary{cursor:pointer;font-weight:700;font-size:14px;color:var(--ac2);padding:6px 0}
+.btn:disabled{opacity:.5;cursor:not-allowed;box-shadow:none;transform:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="warn" id="canvasWarn" hidden><b>Alat ini hanya berjalan di Gemini Canvas.</b> Form tetap bisa diisi, tetapi tombol buat gambar dinonaktifkan di luar Canvas.</div>
+  <header><span class="mark" aria-hidden="true">J</span><div><h1>Character Sheet Studio</h1></div></header>
+  <p class="sub">Isi ciri karakter satu kali, lalu buat sheet utama, grid outfit, dan grid ekspresi dengan wajah yang tetap konsisten. Sheet dibuat langsung di Gemini Canvas, tanpa pindah ke Flow.</p>
+
+  <div class="flow">
+    <div><b>1. Sheet utama</b>Buat beberapa versi, pilih satu yang wajahnya paling cocok.</div>
+    <div><b>2. Jadi acuan otomatis</b>Versi yang aktif dipakai untuk outfit dan ekspresi.</div>
+    <div><b>3. Outfit dan ekspresi</b>Ubah satu hal per percobaan agar wajah tidak melenceng.</div>
+  </div>
+
+  <section class="card">
+    <h2>Identitas</h2>
+    <p class="hint">Tulis dalam bahasa Inggris untuk hasil terbaik. Tombol “Isi contoh” memberi gambaran formatnya.</p>
+    <div class="row"><button class="btn ghost" id="sample" type="button">Isi contoh</button><button class="btn ghost" id="reset" type="button">Kosongkan</button></div>
+    <div class="grid two">
+      <div><span class="lab">Jenis kelamin</span><div class="chips" data-k="gender"><button class="chip" data-v="woman">Perempuan</button><button class="chip" data-v="man">Laki-laki</button></div></div>
+      <div><label for="age">Usia</label><input type="number" id="age" data-f="age" min="16" max="70" placeholder="24"></div>
+      <div><label for="origin">Asal / etnis</label><input type="text" id="origin" data-f="origin" placeholder="Indonesian (Javanese)"></div>
+      <div><label for="name">Nama (hanya untuk Anda)</label><input type="text" id="name" data-f="name" placeholder="Sari"></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Wajah</h2>
+    <p class="hint">Makin spesifik, makin konsisten. Hindari kata “perfect” atau “flawless”.</p>
+    <div class="grid two">
+      <div><span class="lab">Bentuk wajah</span><div class="chips" data-k="face"><button class="chip" data-v="oval">Oval</button><button class="chip" data-v="round">Bulat</button><button class="chip" data-v="heart-shaped">Hati</button><button class="chip" data-v="square">Persegi</button><button class="chip" data-v="long">Lonjong</button></div></div>
+      <div><label for="skin">Kulit</label><input type="text" id="skin" data-f="skin" placeholder="warm tan skin, neutral-warm undertone"></div>
+      <div><label for="eyes">Mata</label><input type="text" id="eyes" data-f="eyes" placeholder="almond-shaped dark brown eyes"></div>
+      <div><label for="brows">Alis</label><input type="text" id="brows" data-f="brows" placeholder="natural medium-thick straight brows"></div>
+      <div><label for="nose">Hidung</label><input type="text" id="nose" data-f="nose" placeholder="soft rounded nose tip"></div>
+      <div><label for="lips">Bibir</label><input type="text" id="lips" data-f="lips" placeholder="full lips with natural pink tone"></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Rambut, tubuh, ciri khas</h2>
+    <div class="grid two">
+      <div><span class="lab">Panjang rambut</span><div class="chips" data-k="hairLen"><button class="chip" data-v="short">Pendek</button><button class="chip" data-v="shoulder-length">Sebahu</button><button class="chip" data-v="long">Panjang</button></div></div>
+      <div><span class="lab">Tekstur rambut</span><div class="chips" data-k="hairTex"><button class="chip" data-v="straight">Lurus</button><button class="chip" data-v="wavy">Bergelombang</button><button class="chip" data-v="curly">Ikal</button></div></div>
+      <div><label for="hairColor">Warna rambut</label><input type="text" id="hairColor" data-f="hairColor" placeholder="dark brown-black"></div>
+      <div><label for="body">Tubuh</label><input type="text" id="body" data-f="body" placeholder="slim build, about 160 cm"></div>
+      <div style="grid-column:1/-1"><label for="mark">Ciri khas (sebut posisinya)</label><input type="text" id="mark" data-f="mark" placeholder="small mole under the left eye"></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Pakaian</h2>
+    <p class="hint">Sheet utama memakai satu pakaian polos. Outfit lain diisi di bawah untuk grid 2×2.</p>
+    <label for="outfit">Pakaian sheet utama</label>
+    <input type="text" id="outfit" data-f="outfit" placeholder="white fitted crop tank top and light pink wide-leg pants, white sneakers">
+    <div style="margin-top:16px"><label for="outfits">Empat outfit untuk grid (satu per baris)</label>
+    <textarea id="outfits" data-f="outfits" rows="4" placeholder="oversized beige hoodie and jeans&#10;white blouse and black trousers&#10;floral summer dress&#10;black blazer over a plain tee"></textarea></div>
+  </section>
+
+  <section class="card">
+    <h2>Foto wajah acuan (opsional)</h2>
+    <p class="hint">Punya foto wajah yang ingin dijadikan dasar? Unggah 1 sampai 2 foto. Tanpa foto, sheet dibuat dari deskripsi saja.</p>
+    <div class="refs" id="refs"></div>
+    <div class="row"><button class="btn ghost" id="addRef" type="button">Unggah foto</button><input type="file" id="refFile" accept="image/*" hidden></div>
+  </section>
+
+  <section class="card">
+    <div class="top"><h2>Identity Lock</h2><span class="tag" id="wc">0 kata</span></div>
+    <p class="hint">Kalimat identitas tetap yang dipakai di semua prompt. Jangan diubah antar percobaan.</p>
+    <div class="out" id="lock"></div>
+    <div class="row" style="margin-top:12px"><button class="btn ghost" data-copy="lock" type="button">Salin Identity Lock</button></div>
+  </section>
+
+  <section class="card">
+    <div class="top"><h2>1. Sheet utama</h2><span class="tag" id="s1">Belum dibuat</span></div>
+    <p class="hint">Tiga tampak badan penuh (depan, samping, belakang) dan satu close-up wajah. Buat beberapa versi, lalu pilih yang aktif: versi itu menjadi acuan untuk outfit dan ekspresi.</p>
+    <div class="stage" id="st1"><div class="empty">Belum ada gambar.</div></div>
+    <div class="vers" id="v1"></div>
+    <div class="row" style="margin-top:14px"><button class="btn" data-gen="1" type="button">Buat gambar</button><button class="btn ghost" data-dl="1" type="button">Unduh</button></div>
+    <div class="err" id="e1" hidden></div>
+    <details><summary>Lihat prompt (bisa juga dipakai di Flow)</summary><div class="out" id="p1"></div><div class="row" style="margin-top:10px"><button class="btn ghost" data-copy="p1" type="button">Salin prompt</button></div></details>
+  </section>
+  <section class="card">
+    <div class="top"><h2>2. Grid outfit (2×2)</h2><span class="tag" id="s2">Belum dibuat</span></div>
+    <p class="hint">Empat pakaian berbeda dengan wajah yang sama. Memakai versi aktif dari sheet utama sebagai acuan.</p>
+    <div class="stage" id="st2"><div class="empty">Belum ada gambar.</div></div>
+    <div class="vers" id="v2"></div>
+    <div class="row" style="margin-top:14px"><button class="btn" data-gen="2" type="button">Buat gambar</button><button class="btn ghost" data-dl="2" type="button">Unduh</button></div>
+    <div class="err" id="e2" hidden></div>
+    <details><summary>Lihat prompt (bisa juga dipakai di Flow)</summary><div class="out" id="p2"></div><div class="row" style="margin-top:10px"><button class="btn ghost" data-copy="p2" type="button">Salin prompt</button></div></details>
+  </section>
+  <section class="card">
+    <div class="top"><h2>3. Grid ekspresi (3×3)</h2><span class="tag" id="s3">Belum dibuat</span></div>
+    <p class="hint">Sembilan ekspresi close-up. Memakai versi aktif dari sheet utama sebagai acuan.</p>
+    <div class="stage" id="st3"><div class="empty">Belum ada gambar.</div></div>
+    <div class="vers" id="v3"></div>
+    <div class="row" style="margin-top:14px"><button class="btn" data-gen="3" type="button">Buat gambar</button><button class="btn ghost" data-dl="3" type="button">Unduh</button></div>
+    <div class="err" id="e3" hidden></div>
+    <div class="tip"><b>Cek konsistensi:</b> bandingkan bentuk mata, alis, dan posisi tahi lalat di semua tampilan. Kalau melenceng, buat ulang dengan acuan yang sama tanpa mengubah Identity Lock.</div>
+    <details><summary>Lihat prompt (bisa juga dipakai di Flow)</summary><div class="out" id="p3"></div><div class="row" style="margin-top:10px"><button class="btn ghost" data-copy="p3" type="button">Salin prompt</button></div></details>
+  </section>
+</div>
+
+<script>
+const apiKey = ""; // Dibiarkan kosong: diisi otomatis oleh Gemini Canvas. Jangan isi manual.
+const IN_CANVAS = (() => { try { return window.self !== window.top; } catch (e) { return true; } })();
+const IMAGE_MODELS = ["gemini-3.1-flash-image-preview", "gemini-3.1-flash-image", "gemini-2.5-flash-image-preview"];
+let workingImageModel = null, imageConfigSupported = true;
+const exhausted = new Set();
+class GenError extends Error { constructor(kind, msg) { super(msg); this.kind = kind; } }
+const isModelMissing = (s, t) => s === 404 || (s === 400 && /not found|not supported|unsupported model|is not available/i.test(t));
+const isQuota = (s, t) => s === 429 || /RESOURCE_EXHAUSTED|quota|rate limit/i.test(t);
+const FRIENDLY_ERRORS = {
+  safety: "AI menolak permintaan ini karena filter keamanan. Coba foto lain atau ubah kalimatnya.",
+  noimage: "AI tidak mengembalikan gambar kali ini. Tekan Generate Ulang untuk mencoba lagi.",
+  model: "Model gambar belum tersedia untuk akun ini.",
+  quota: "Kuota Gemini untuk akun ini sedang habis. Tunggu beberapa menit, lalu coba lagi.",
+  failed: "Gagal memproses permintaan. Silakan coba lagi.",
+  canvas: "Fitur AI hanya berjalan di Gemini Canvas. Buka alat ini lewat Canvas di gemini.google.com."
+};
+async function fetchWithRetry(url, options) {
+  const delays = [1000, 2000, 4000, 8000, 16000];
+  for (let i = 0; i <= delays.length; i++) {
+    try {
+      const res = await fetch(url, options);
+      if (res.ok || i === delays.length || res.status === 404) return res;
+      if (res.status === 400) {
+        const t = await res.clone().text();
+        if (isModelMissing(400, t) || /imageConfig|image_config|aspect/i.test(t)) return res;
+      }
+    } catch (e) { if (i === delays.length) throw e; }
+    await new Promise(r => setTimeout(r, delays[i]));
+  }
+}
+async function post(model, body) {
+  if (!IN_CANVAS) throw new GenError("canvas", FRIENDLY_ERRORS.canvas);
+  try {
+    return await fetchWithRetry(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
+      { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+  } catch (e) { throw new GenError("failed", FRIENDLY_ERRORS.failed); }
+}
+async function generateImage(parts, aspectRatio) {
+  const order = (workingImageModel ? [workingImageModel, ...IMAGE_MODELS.filter(m => m !== workingImageModel)] : IMAGE_MODELS).filter(m => !exhausted.has(m));
+  let hitQuota = false;
+  for (const model of order) {
+    let useCfg = imageConfigSupported;
+    for (let attempt = 0; attempt < 2; attempt++) {
+      const generationConfig = { responseModalities: ["TEXT", "IMAGE"] };
+      if (useCfg) generationConfig.imageConfig = { aspectRatio };
+      const res = await post(model, { contents: [{ parts }], generationConfig });
+      if (!res) throw new GenError("failed", FRIENDLY_ERRORS.failed);
+      if (!res.ok) {
+        const t = await res.text();
+        if (res.status === 400 && useCfg && /imageConfig|image_config|aspect/i.test(t)) { imageConfigSupported = false; useCfg = false; continue; }
+        if (isModelMissing(res.status, t)) break;
+        if (isQuota(res.status, t)) { hitQuota = true; exhausted.add(model); if (workingImageModel === model) workingImageModel = null; break; }
+        if (/safety|blocked|prohibited/i.test(t)) throw new GenError("safety", FRIENDLY_ERRORS.safety);
+        throw new GenError("failed", FRIENDLY_ERRORS.failed);
+      }
+      const result = await res.json();
+      const cand = result.candidates && result.candidates[0];
+      if (!cand) { if (result.promptFeedback && result.promptFeedback.blockReason) throw new GenError("safety", FRIENDLY_ERRORS.safety); throw new GenError("noimage", FRIENDLY_ERRORS.noimage); }
+      const img = ((cand.content && cand.content.parts) || []).filter(p => p.inlineData && !p.thought).pop();
+      if (!img) { if (/SAFETY|PROHIBITED|BLOCK/i.test(cand.finishReason || "")) throw new GenError("safety", FRIENDLY_ERRORS.safety); throw new GenError("noimage", FRIENDLY_ERRORS.noimage); }
+      workingImageModel = model;
+      return `data:${img.inlineData.mimeType || "image/png"};base64,${img.inlineData.data}`;
+    }
+  }
+  if (hitQuota) { IMAGE_MODELS.forEach(m => exhausted.delete(m)); throw new GenError("quota", FRIENDLY_ERRORS.quota); }
+  throw new GenError("model", FRIENDLY_ERRORS.model);
+}
+
+
+const KEY = "csb-draft-v1";
+const BLANK = { gender: "woman", face: "", hairLen: "", hairTex: "", age: "", origin: "", name: "", skin: "", eyes: "", brows: "", nose: "", lips: "", hairColor: "", body: "", mark: "", outfit: "", outfits: "" };
+const SAMPLE = { gender: "woman", face: "oval", hairLen: "shoulder-length", hairTex: "wavy", age: "24", origin: "Indonesian (Javanese)", name: "Sari", skin: "warm tan skin with a neutral-warm undertone", eyes: "almond-shaped dark brown eyes", brows: "natural medium-thick straight brows", nose: "soft rounded nose tip", lips: "full lips with a natural pink tone", hairColor: "dark brown-black", body: "slim build, about 160 cm", mark: "a small mole under the left eye", outfit: "white fitted crop tank top and light pink wide-leg pants, white sneakers", outfits: "oversized beige hoodie and blue jeans\nwhite blouse and black trousers\nfloral summer dress\nblack blazer over a plain white tee" };
+let F = { ...BLANK };
+try { const raw = localStorage.getItem(KEY); if (raw) F = { ...BLANK, ...JSON.parse(raw) }; } catch (e) {}
+
+const $ = (s) => document.querySelector(s);
+const REALISM = "Ultra-realistic photograph, natural skin texture with visible pores, slight natural facial asymmetry, unretouched, no beauty filter, not a 3D render, not an illustration, no cartoon style.";
+const EXPR = ["neutral", "soft smile", "big laugh", "surprised", "thinking", "serious", "shy", "excited", "skeptical"];
+
+function readFormIntoF() {
+  // Perbaikan Identity Lock: baca nilai langsung dari form yang terlihat,
+  // supaya Lock tidak pernah tertinggal dari form (mis. setelah "Isi contoh").
+  // Ini mengatasi kasus Lock tetap "CHARACTER: woman." padahal form sudah terisi.
+  try {
+    document.querySelectorAll("[data-f]").forEach(el => { if (el.dataset.f) F[el.dataset.f] = el.value || ""; });
+    document.querySelectorAll("[data-k]").forEach(g => {
+      const sel = g.querySelector('.chip[aria-pressed="true"]');
+      F[g.dataset.k] = sel ? (sel.dataset.v || "") : "";
+    });
+  } catch (e) {}
+}
+function updateLock() {
+  readFormIntoF();
+  const L = lock();
+  const el = document.getElementById("lock"); if (el) el.textContent = L;
+  const wc = document.getElementById("wc"); if (wc) wc.textContent = (L.split(/\s+/).filter(Boolean).length) + " kata";
+  return L;
+}
+function lock() {
+  readFormIntoF();
+  const g = F.gender === "man" ? "man" : "woman";
+  const head = [F.age ? F.age + "-year-old" : "", F.origin, g].filter(Boolean).join(" ");
+  const hair = [F.hairLen, F.hairTex, F.hairColor, "hair"].filter(Boolean).join(" ");
+  const parts = [head, F.face ? F.face + " face" : "", F.skin, F.eyes, F.brows, F.nose, F.lips, F.hairLen || F.hairTex || F.hairColor ? hair : "", F.mark, F.body].filter(Boolean);
+  return parts.length ? "CHARACTER: " + parts.join(", ") + "." : "";
+}
+function build() {
+  const L = lock() || "CHARACTER: (isi identitas di atas).";
+  const outfit = F.outfit || "a plain fitted outfit";
+  const p1 = `Character reference sheet of one person. ${L} Layout: top row shows three full-body views side by side (front, side profile, back), all wearing the same outfit: ${outfit}. Below, one close-up headshot looking at the camera with a neutral expression. Plain light grey seamless background, soft even studio lighting, identical proportions and face in every view, no text or labels. ${REALISM}`;
+  const o = (F.outfits || "").split("\n").map(x => x.trim()).filter(Boolean);
+  while (o.length < 4) o.push("a different casual outfit");
+  const p2 = `Use the attached reference image and keep the exact same face, body and identity. ${L} Create a 2x2 grid of the same person in four different outfits, each a full-body front view, standing straight. Outfit 1: ${o[0]}. Outfit 2: ${o[1]}. Outfit 3: ${o[2]}. Outfit 4: ${o[3]}. Plain light grey seamless background, identical soft studio lighting in every cell, no text or labels. ${REALISM}`;
+  const p3 = `Use the attached reference image and keep the exact same face and identity. ${L} Create a 3x3 grid of close-up headshots of the same person, same outfit and hairstyle as the reference, one expression per cell: ${EXPR.join(", ")}. Plain light grey seamless background, identical soft studio lighting in every cell, no text or labels. ${REALISM}`;
+  return { lock: L, p1, p2, p3 };
+}
+
+const RATIO = { 1: "3:4", 2: "1:1", 3: "1:1" };
+const NAME = { 1: "sheet-utama", 2: "grid-outfit", 3: "grid-ekspresi" };
+const G = { 1: { v: [], a: 0 }, 2: { v: [], a: 0 }, 3: { v: [], a: 0 } };
+let REF = [], BUSY = 0;
+const splitDataUrl = (u) => { const [h, d] = u.split(","); return { mime: (h.match(/data:(.*?);/) || [])[1] || "image/png", data: d }; };
+const imgPart = (u) => { const { mime, data } = splitDataUrl(u); return { inlineData: { mimeType: mime, data } }; };
+const refPrefix = () => REF.length ? "Use the attached reference photo of the person and keep the exact same face and identity. " : "";
+function prompts() { const b = build(); return { 1: refPrefix() + b.p1, 2: b.p2, 3: b.p3 }; }
+const acuan = () => G[1].v[G[1].a] || REF[0] || null;
+
+function render() {
+  const b = build(), P = prompts();
+  $("#lock").textContent = b.lock;
+  $("#wc").textContent = (b.lock.split(/\s+/).filter(Boolean).length) + " kata";
+  for (const n of [1, 2, 3]) {
+    $("#p" + n).textContent = P[n];
+    const g = G[n], cur = g.v[g.a];
+    const st = $("#st" + n);
+    st.innerHTML = "";
+    if (cur) { const im = document.createElement("img"); im.src = cur; im.alt = "Hasil " + NAME[n]; st.appendChild(im); }
+    else { const d = document.createElement("div"); d.className = "empty"; d.textContent = "Belum ada gambar."; st.appendChild(d); }
+    if (BUSY === n) { const o = document.createElement("div"); o.className = "busy"; o.innerHTML = '<div class="spin"></div><div>Membuat gambar…<br><small>Bisa memakan waktu sekitar satu menit.</small></div>'; st.appendChild(o); }
+    $("#s" + n).textContent = cur ? (n === 1 ? "Versi " + (g.a + 1) + " (acuan)" : "Versi " + (g.a + 1)) : "Belum dibuat";
+    const vs = $("#v" + n); vs.innerHTML = "";
+    g.v.forEach((_, i) => { const c = document.createElement("button"); c.type = "button"; c.className = "chip"; c.dataset.ver = n + ":" + i; c.textContent = "V" + (i + 1); c.setAttribute("aria-pressed", String(g.a === i)); vs.appendChild(c); });
+    const btn = document.querySelector('[data-gen="' + n + '"]');
+    btn.disabled = !IN_CANVAS || BUSY !== 0;
+    btn.textContent = BUSY === n ? "Membuat…" : (g.v.length ? "Buat ulang" : "Buat gambar");
+    document.querySelector('[data-dl="' + n + '"]').disabled = !cur;
+  }
+  const rf = $("#refs"); rf.innerHTML = "";
+  REF.forEach((u, i) => { const d = document.createElement("div"); d.className = "th"; const im = document.createElement("img"); im.src = u; im.alt = "Foto acuan " + (i + 1); const x = document.createElement("button"); x.type = "button"; x.dataset.rm = i; x.setAttribute("aria-label", "Hapus foto"); x.textContent = "×"; d.append(im, x); rf.appendChild(d); });
+  $("#addRef").disabled = REF.length >= 2;
+}
+function showErr(n, msg) { const e = $("#e" + n); e.hidden = !msg; e.textContent = msg || ""; }
+async function generate(n) {
+  showErr(n, "");
+  const parts = [{ text: prompts()[n] }];
+  if (n === 1) REF.forEach(u => parts.push(imgPart(u)));
+  else {
+    const a = acuan();
+    if (!a) { showErr(n, "Buat sheet utama dulu (atau unggah foto wajah acuan) agar wajahnya konsisten."); return; }
+    parts.push(imgPart(a));
+  }
+  BUSY = n; render();
+  try {
+    const url = await generateImage(parts, RATIO[n]);
+    G[n].v.push(url); G[n].a = G[n].v.length - 1;
+  } catch (e) { showErr(n, e instanceof GenError ? e.message : FRIENDLY_ERRORS.failed); }
+  BUSY = 0; render();
+}
+function download(n) {
+  const u = G[n].v[G[n].a]; if (!u) return;
+  const a = document.createElement("a"); a.href = u; a.download = NAME[n] + "-v" + (G[n].a + 1) + ".png";
+  document.body.appendChild(a); a.click(); a.remove();
+}
+function loadImage(file) {
+  return new Promise((res, rej) => {
+    const fr = new FileReader();
+    fr.onerror = rej;
+    fr.onload = () => { const im = new Image(); im.onerror = rej; im.onload = () => {
+      const s = Math.min(1, 1024 / Math.max(im.width, im.height)), c = document.createElement("canvas");
+      c.width = Math.round(im.width * s); c.height = Math.round(im.height * s);
+      c.getContext("2d").drawImage(im, 0, 0, c.width, c.height); res(c.toDataURL("image/jpeg", 0.9));
+    }; im.src = fr.result; };
+    fr.readAsDataURL(file);
+  });
+}
+function sync() {
+  document.querySelectorAll("[data-f]").forEach(el => { el.value = F[el.dataset.f] || ""; });
+  document.querySelectorAll("[data-k]").forEach(g => g.querySelectorAll(".chip").forEach(c => c.setAttribute("aria-pressed", String(F[g.dataset.k] === c.dataset.v))));
+  render();
+}
+function save() { try { localStorage.setItem(KEY, JSON.stringify(F)); } catch (e) {} }
+document.addEventListener("input", (e) => { const f = e.target.dataset && e.target.dataset.f; if (f) { F[f] = e.target.value; save(); render(); } });
+document.addEventListener("click", async (e) => {
+  const c = e.target.closest(".chip");
+  if (c && c.dataset.ver) { const [n, i] = c.dataset.ver.split(":").map(Number); G[n].a = i; render(); return; }
+  if (c && c.parentElement.dataset.k) { const k = c.parentElement.dataset.k; F[k] = F[k] === c.dataset.v ? "" : c.dataset.v; save(); sync(); return; }
+  const gn = e.target.closest("[data-gen]"); if (gn) { generate(Number(gn.dataset.gen)); return; }
+  const dl = e.target.closest("[data-dl]"); if (dl) { download(Number(dl.dataset.dl)); return; }
+  const rm = e.target.closest("[data-rm]"); if (rm) { REF.splice(Number(rm.dataset.rm), 1); render(); return; }
+  const cp = e.target.closest("[data-copy]");
+  if (cp) {
+    const text = $("#" + cp.dataset.copy).textContent, old = cp.textContent;
+    try { await navigator.clipboard.writeText(text); }
+    catch (err) { const t = document.createElement("textarea"); t.value = text; document.body.appendChild(t); t.select(); try { document.execCommand("copy"); } catch (_) {} t.remove(); }
+    cp.textContent = "Tersalin ✓"; setTimeout(() => { cp.textContent = old; }, 1400);
+  }
+});
+$("#sample").addEventListener("click", () => { try { localStorage.removeItem(KEY); } catch (e) {} F = { ...SAMPLE }; save(); sync(); updateLock(); render(); });
+$("#reset").addEventListener("click", () => { try { localStorage.removeItem(KEY); } catch (e) {} F = { ...BLANK }; save(); sync(); updateLock(); render(); });
+$("#addRef").addEventListener("click", () => $("#refFile").click());
+$("#refFile").addEventListener("change", async (e) => {
+  const f = e.target.files && e.target.files[0]; e.target.value = ""; if (!f || REF.length >= 2) return;
+  try { REF.push(await loadImage(f)); } catch (err) { showErr(1, "Foto tidak bisa dibaca. Coba file JPG atau PNG lain."); }
+  render();
+});
+if (!IN_CANVAS) $("#canvasWarn").hidden = false;
+sync();
+</script>
+</body>
+</html>

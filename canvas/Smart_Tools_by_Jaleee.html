@@ -1,0 +1,1887 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<title>Smart Tools by Jaleee</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  /* ═══════ SMART TOOLS BY JALEEE — REDESIGN TOTAL: OBSIDIAN STUDIO & DISTINCT STEP ARCHITECTURES ═══════
+     Mengubah total struktur layout, mengubah posisi navigasi ke floating top command bar,
+     dan memberikan struktur visual & komposisi kolom yang unik berbeda 100% untuk setiap tahap
+     (Step 1: Asymmetric Casting Dock, Step 2: Darkroom Split-Theater, Step 3: Dual-Column Director Console). */
+  :root{
+    --bg:#0c0e14; --zinc-900:#131722; --zinc-800:#1a1f2e; --zinc-700:#252c40; --zinc-600:#5b6682; --zinc-500:#8b96b2; --zinc-400:#b2bcd4; --zinc-300:#d3dbee; --zinc-200:#eef2fa; --zinc-100:#ffffff;
+    --glass:#141824; --glass-2:#191e2c; --well:#0e111a;
+    --b-1:rgba(255,255,255,.08); --b-2:rgba(255,255,255,.15); --b-3:rgba(255,255,255,.26); --b-4:#38bdf8;
+    
+    /* Warna Khas Per Tahap agar kontras dan mudah dibedakan */
+    --c1:#f59e0b; --c1-dark:#d97706; --c1-soft:rgba(245,158,11,.14); /* Amber untuk Siapkan Aset */
+    --c2:#ec4899; --c2-dark:#db2777; --c2-soft:rgba(236,72,153,.14); /* Rose/Magenta untuk First Frame */
+    --c3:#06b6d4; --c3-dark:#0891b2; --c3-soft:rgba(6,182,212,.14);  /* Cyan untuk Brief & Prompt */
+
+    --accent:#38bdf8; --accent-dark:#0284c7; --accent-soft:rgba(56,189,248,.14);
+    --teal:#10b981; --teal-soft:rgba(16,185,129,.14);
+    --red:#f43f5e; --red-bg:rgba(244,63,94,.12); --red-b:rgba(244,63,94,.3);
+    --green-t:#34d399; --green-bg:rgba(52,211,153,.12); --green-b:rgba(52,211,153,.3);
+    
+    --head:'Space Grotesk',system-ui,sans-serif; --body:'Plus Jakarta Sans',system-ui,sans-serif; --mono:'JetBrains Mono',monospace;
+    --r-lg:22px; --r-md:15px; --r-sm:11px;
+    --shadow-card:0 20px 40px -16px rgba(0,0,0,.65);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--bg);color:var(--zinc-100);font-family:var(--body);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+  body{min-height:100vh;overflow-x:hidden;background-image:radial-gradient(circle at 15% 10%, rgba(245,158,11,.06) 0%, transparent 45%), radial-gradient(circle at 85% 30%, rgba(236,72,153,.06) 0%, transparent 45%), radial-gradient(circle at 50% 90%, rgba(6,182,212,.06) 0%, transparent 50%)}
+  ::selection{background:var(--accent);color:#0c0e14}
+  img{display:block;max-width:100%}
+  button,input,textarea{font:inherit;color:inherit}
+  button{cursor:pointer;border:0;background:none}
+  h1,h2,h3,h4{font-family:var(--head);letter-spacing:-.025em;color:var(--zinc-100)}
+  [hidden]{display:none!important}
+
+  /* ── STRUKTUR UTAMA BARU: TOP FLOATING DECK + SINGLE CANVAS STREAM ── */
+  .wrap{max-width:1340px;margin:0 auto;padding:18px 18px 90px;display:flex;flex-direction:column;gap:22px}
+  @media(min-width:960px){.wrap{padding:24px 36px 96px;gap:26px}}
+
+  /* Top Command Deck: Brand di Kiri, Pill Stepper di Tengah, Sesi Baru di Kanan */
+  .sidebar-rail{position:sticky;top:14px;z-index:40;background:rgba(20,24,36,.86);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border:1px solid var(--b-2);border-radius:20px;padding:12px 18px;box-shadow:0 16px 36px -10px rgba(0,0,0,.75);display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px}
+  .nav{display:contents}
+  .brand{display:flex;align-items:center;gap:11px;order:1}
+  .brand .mark{width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,var(--c1),var(--c2));color:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--head);font-weight:700;font-size:21px;box-shadow:0 4px 14px rgba(236,72,153,.35);flex-shrink:0}
+  .brand b{font-family:var(--head);font-size:17px;font-weight:700;display:block;line-height:1.1;color:#fff}
+  .brand span{font-size:11px;font-weight:600;color:var(--zinc-500)}
+  
+  .pill{order:2;display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:8px 14px;border-radius:11px;background:var(--zinc-800);border:1px solid var(--b-2);font-size:12px;font-weight:700;color:var(--zinc-300);transition:all .2s}
+  @media(min-width:920px){.pill{order:3}}
+  .pill:hover{background:#fff;color:#0c0e14;border-color:#fff}
+
+  /* Stepper Horizontal Berwarna Khusus Per Tahap */
+  .steps{order:3;width:100%;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding-top:10px;border-top:1px solid var(--b-1)}
+  @media(min-width:920px){.steps{order:2;width:auto;flex:1;max-width:650px;padding-top:0;border-top:0;gap:10px}}
+  .step-tab{display:flex;align-items:center;gap:10px;padding:9px 13px;border-radius:13px;background:var(--well);border:1px solid var(--b-1);text-align:left;transition:all .22s}
+  .step-tab:hover{background:var(--zinc-800);border-color:var(--b-2)}
+  .step-tab b{font-family:var(--head);font-size:13px;font-weight:700;display:block;color:var(--zinc-200)}
+  .step-tab small{display:block;font-size:11px;color:var(--zinc-500)}
+  @media(max-width:620px){.step-tab{flex-direction:column;align-items:center;text-align:center;gap:4px;padding:8px 6px}.step-tab small{display:none}.step-tab b{font-size:11.5px}}
+
+  /* Warna aktif unik untuk tiap tombol langkah */
+  .step-tab[data-step="1"][aria-current=step]{background:linear-gradient(135deg,var(--c1),var(--c1-dark));border-color:transparent;box-shadow:0 6px 20px -4px rgba(245,158,11,.45)}
+  .step-tab[data-step="2"][aria-current=step]{background:linear-gradient(135deg,var(--c2),var(--c2-dark));border-color:transparent;box-shadow:0 6px 20px -4px rgba(236,72,153,.45)}
+  .step-tab[data-step="3"][aria-current=step]{background:linear-gradient(135deg,var(--c3),var(--c3-dark));border-color:transparent;box-shadow:0 6px 20px -4px rgba(6,182,212,.45)}
+  .step-tab[aria-current=step] b{color:#fff}
+  .step-tab[aria-current=step] small{color:rgba(255,255,255,.88)}
+
+  .num{min-width:26px;height:26px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;font-family:var(--mono);font-weight:600;font-size:12px;background:var(--zinc-800);color:var(--zinc-200);border:1px solid var(--b-2);flex-shrink:0}
+  .step-tab[aria-current=step] .num{background:rgba(0,0,0,.25);color:#fff;border-color:transparent}
+  .num.done{background:var(--green-bg);color:var(--green-t);border-color:var(--green-b)}
+  .rail-foot{display:none}
+
+  /* Zona Utama */
+  .main-stage{min-width:0;display:flex;flex-direction:column;gap:22px}
+
+  /* Header Compact Split */
+  .head{background:var(--glass);border:1px solid var(--b-1);border-radius:var(--r-lg);padding:22px 26px;box-shadow:var(--shadow-card);display:flex;flex-direction:column;gap:8px;position:relative;overflow:hidden}
+  @media(min-width:860px){.head{flex-direction:row;align-items:center;justify-content:space-between;gap:24px}}
+  .head-title-wrap{display:flex;flex-direction:column;gap:6px}
+  .eyebrow{display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);padding:4px 11px;border-radius:999px;width:max-content}
+  .eyebrow::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--accent)}
+  .head h1{font-size:clamp(26px,3.8vw,38px);font-weight:700;line-height:1.08;color:#fff}
+  .head p{font-size:14px;color:var(--zinc-400);max-width:52ch}
+
+  /* Panel Penjelasan */
+  .about{background:var(--glass);border:1px solid var(--b-1);border-radius:var(--r-lg);box-shadow:var(--shadow-card)}
+  .about>summary{cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px 22px;font-family:var(--head);font-size:16px;font-weight:700;color:#fff}
+  .about>summary::-webkit-details-marker{display:none}
+  .about>summary::after{content:"Sembunyikan";font-family:var(--body);font-size:11.5px;font-weight:700;color:var(--accent);background:var(--accent-soft);border-radius:999px;padding:5px 13px}
+  .about:not([open])>summary::after{content:"Baca panduan"}
+  .about-body{padding:0 22px 22px;display:grid;gap:16px;border-top:1px solid var(--b-1)}
+  .about-body>p.lead{margin-top:14px;font-size:14px;color:var(--zinc-400)}
+  .about-grid{display:grid;grid-template-columns:1fr;gap:12px}
+  @media(min-width:760px){.about-grid.three{grid-template-columns:repeat(3,1fr)}}
+  .about-item{background:var(--well);border:1px solid var(--b-1);border-radius:var(--r-md);padding:15px 17px}
+  .about-item h4{font-size:14.5px;margin-bottom:5px;color:#fff}
+  .about-item p{font-size:13px;color:var(--zinc-400)}
+  .about-item b{color:var(--accent)}
+  .about-note{border-left:3px solid var(--accent);background:var(--accent-soft);padding:11px 15px;border-radius:0 11px 11px 0;font-size:13px;color:var(--zinc-300)}
+
+  /* ═══════════════════════════════════════════════════════════════════════════
+     PERBEDAAN TOTAL TATA LETAK ANTAR KOLOM / TAHAP (1, 2, DAN 3)
+     ═══════════════════════════════════════════════════════════════════════════ */
+
+  /* ── TAHAP 1: SIAPKAN ASET (Aksen Amber + Tata Letak Roster Kiri & Produk Kanan Bertingkat) ── */
+  #step1 .card{border-top:3px solid var(--c1);background:linear-gradient(180deg,#181c29 0%,#131621 100%)}
+  #step1 .num{background:var(--c1-soft);color:var(--c1);border-color:rgba(245,158,11,.35)}
+  #step1 .badge{background:var(--c1-soft);color:var(--c1)}
+  #step1 .btn.butter{background:var(--c1);color:#0c0e14;box-shadow:0 8px 22px -6px rgba(245,158,11,.5)}
+  #step1 .btn.butter:hover:not(:disabled){background:var(--c1-dark);color:#fff}
+  #step1 .slot.req{border-color:var(--c1);background:var(--c1-soft)}
+  #step1 .slot.req .ic{background:var(--c1);border-color:var(--c1)}
+  #step1 .slot.req .ic svg{stroke:#0c0e14}
+  #step1 .icard[aria-pressed=true]{background:var(--c1);border-color:var(--c1);color:#0c0e14}
+
+  /* Grid Tahap 1: Kolom Kiri (1.35fr) = Kartu Influencer (Atas ke Bawah), Kolom Kanan (0.65fr) = Produk + Tips */
+  .step1-layout{display:grid;grid-template-columns:1fr;gap:22px}
+  @media(min-width:980px){.step1-layout{grid-template-columns:1.35fr .65fr;align-items:start}}
+  .step1-top-split{display:grid;grid-template-columns:1fr;gap:20px}
+  @media(min-width:720px){.step1-top-split{grid-template-columns:1fr 1fr;align-items:start}}
+  .step1-bottom{display:flex;flex-direction:column;gap:20px}
+  .step1-bottom .step1-top-split{grid-template-columns:1fr}
+
+  /* ── TAHAP 2: FIRST FRAME (Aksen Rose/Magenta + Tata Letak Studio Gelap: Pengaturan Kiri, Monitor Besar Kanan) ── */
+  #step2 .card{border-left:4px solid var(--c2);background:linear-gradient(145deg,#191826 0%,#12141f 100%)}
+  #step2 .num{background:var(--c2-soft);color:var(--c2);border-color:rgba(236,72,153,.35)}
+  #step2 .chip[aria-pressed=true]{background:var(--c2);border-color:var(--c2);color:#fff;box-shadow:0 4px 14px -4px rgba(236,72,153,.55)}
+  #step2 .btn:not(.ghost){background:linear-gradient(135deg,var(--c2),var(--c2-dark));color:#fff;box-shadow:0 8px 24px -6px rgba(236,72,153,.55)}
+  #step2 .sugg button[aria-pressed=true]{background:var(--c2);border-color:var(--c2);color:#fff}
+
+  /* Grid Tahap 2: Kontrol di KIRI (44%), Monitor Preview Lebar di KANAN (56%) */
+  .step2-layout{display:grid;grid-template-columns:1fr;gap:22px}
+  @media(min-width:980px){
+    .step2-layout{grid-template-columns:.85fr 1.15fr;align-items:start}
+    .step2-controls{order:1}
+    .step2-preview{order:2;position:sticky;top:92px}
+  }
+
+  /* ── TAHAP 3: BRIEF & PROMPT (Aksen Cyan + Tata Letak Director Desk: Panel Brief Kiri, Sticky Output & Banner Terkunci di Kanan) ── */
+  #step3 .card{border-right:4px solid var(--c3);background:linear-gradient(165deg,#121d28 0%,#121622 100%)}
+  #step3 .num{background:var(--c3-soft);color:var(--c3);border-color:rgba(6,182,212,.35)}
+  #step3 .chip[aria-pressed=true]{background:var(--c3);border-color:var(--c3);color:#0c0e14;box-shadow:0 4px 14px -4px rgba(6,182,212,.55)}
+  #step3 .btn:not(.ghost):not(.butter){background:linear-gradient(135deg,var(--c3),var(--c3-dark));color:#fff;box-shadow:0 8px 24px -6px rgba(6,182,212,.55)}
+  #step3 .sugg button[aria-pressed=true]{background:var(--c3);border-color:var(--c3);color:#0c0e14}
+  #step3 .bsec h3{color:var(--c3)}
+  #step3 .bsec h3::before{background:var(--c3)}
+
+  /* Grid Tahap 3: 2 Kolom Sejajar — Brief Video di KIRI (1.15fr), Kolom Kanan (0.85fr) menumpuk First Frame Terkunci + Output Prompt + Shot Berikutnya */
+  .step3-layout{display:grid;grid-template-columns:1fr;gap:22px}
+  @media(min-width:980px){
+    .step3-layout{grid-template-columns:1.15fr .85fr;align-items:start}
+    .step3-cols{display:contents}
+    .step3-brief-col{grid-column:1;grid-row:1 / span 3}
+    .step3-banner-col{grid-column:2;grid-row:1}
+    .step3-right-stack{grid-column:2;grid-row:2}
+  }
+  .ff-banner{display:flex;flex-direction:column;gap:14px}
+
+  /* Kartu Umum */
+  .card{background:var(--glass);border:1px solid var(--b-1);border-radius:var(--r-lg);padding:24px;box-shadow:var(--shadow-card)}
+  .card h2{font-size:20px;font-weight:700;display:flex;align-items:center;gap:10px;margin-bottom:4px;color:#fff}
+  .card .sub{font-size:13.5px;color:var(--zinc-400);margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--b-1)}
+  .stack{display:grid;gap:18px}
+
+  .label{display:flex;align-items:center;gap:7px;font-size:12.5px;font-weight:700;color:var(--zinc-200);margin-bottom:8px}
+  .hint{font-size:12px;color:var(--zinc-500);margin-top:6px;line-height:1.55}
+  .badge{display:inline-flex;align-items:center;font-size:11px;font-weight:700;padding:3px 10px;border-radius:999px;background:var(--teal-soft);color:var(--teal)}
+  .count{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
+  .row-between{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
+
+  /* Input & Textarea */
+  input[type=text],input[type=number],textarea{width:100%;background:var(--well);border:1.5px solid var(--b-2);border-radius:12px;padding:11px 14px;font-size:14.5px;font-weight:500;color:#fff;outline:none;transition:all .2s}
+  input[type=text]:focus,input[type=number]:focus,textarea:focus{background:var(--zinc-900);border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+  ::placeholder{color:var(--zinc-600);font-weight:400}
+  textarea{resize:vertical;min-height:84px;line-height:1.6}
+
+  /* Slot Upload */
+  .slots{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+  .slots.char{grid-template-columns:repeat(3,1fr)}
+  .slots.char>:first-child{grid-column:span 2;grid-row:span 2}
+  .slots.even.two-cols{grid-template-columns:repeat(2,1fr)}
+  .slots.one{grid-template-columns:1fr}
+  .slots.one>.slot{aspect-ratio:16/9}
+  .slot{position:relative;aspect-ratio:1/1;border-radius:16px;border:1.5px dashed var(--b-3);background:var(--well);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;text-align:center;padding:12px;overflow:hidden;transition:all .2s}
+  .slot:hover{border-color:var(--accent);background:var(--zinc-800);transform:translateY(-2px)}
+  .slot .ic{width:42px;height:42px;border-radius:12px;background:var(--zinc-800);border:1px solid var(--b-2);display:flex;align-items:center;justify-content:center;transition:transform .2s}
+  .slot .ic svg{width:19px;height:19px;stroke:var(--zinc-300);stroke-width:2.2}
+  .slot:hover .ic{transform:scale(1.08)}
+  .slot .t1{font-size:12px;font-weight:700;color:var(--zinc-200)}
+  .slot .t2{font-size:11px;color:var(--zinc-500)}
+  .slot.filled{border-style:solid;border-color:var(--b-2);padding:0;background:var(--zinc-900)}
+  .slot.filled img{width:100%;height:100%;object-fit:cover}
+  .slots.one>.slot.filled img,.slot.filled.contain img{object-fit:contain;background:var(--well)}
+  .slot .tag{position:absolute;top:8px;left:8px;z-index:3;background:rgba(12,14,20,.85);color:#fff;font-size:10px;font-weight:700;padding:3px 9px;border-radius:999px;border:1px solid var(--b-2)}
+  .slot .rm{position:absolute;top:8px;right:8px;z-index:3;width:26px;height:26px;border-radius:50%;background:var(--red);color:#fff;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700}
+
+  /* Chip, Sugg, Fixes */
+  .chips{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{display:inline-flex;align-items:center;gap:8px;padding:9px 15px;border-radius:11px;background:var(--well);border:1px solid var(--b-2);font-size:13px;font-weight:600;color:var(--zinc-300);transition:all .18s}
+  .chip:hover{background:var(--zinc-800);border-color:var(--b-3);color:#fff}
+  .chip .shape{border:1.5px solid currentColor;border-radius:3px;flex-shrink:0}
+  .chip[aria-pressed=true]::after{content:"✓";font-weight:800;margin-left:2px}
+  .chip.s{padding:8px 14px;font-size:12.5px}
+
+  .sugg,.fixes{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+  .sugg button,.fixes button{font-size:11.5px;font-weight:600;padding:6px 11px;border-radius:8px;background:var(--well);border:1px solid var(--b-2);color:var(--zinc-400);transition:all .18s}
+  .sugg button:hover,.fixes button:hover{border-color:var(--b-3);color:#fff;background:var(--zinc-800)}
+
+  /* Tombol Aksi */
+  .btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:50px;padding:12px 22px;border-radius:14px;background:var(--accent);color:#0c0e14;font-size:14.5px;font-weight:700;transition:all .2s}
+  .btn:hover:not(:disabled){transform:translateY(-1px);filter:brightness(1.06)}
+  .btn:disabled{opacity:.38;cursor:not-allowed;box-shadow:none;transform:none}
+  .btn.sm{min-height:42px;font-size:13px;padding:9px 16px;border-radius:11px}
+  .btn.ghost{background:var(--zinc-800);color:var(--zinc-200);border:1.5px solid var(--b-2);box-shadow:none}
+  .btn.ghost:hover:not(:disabled){background:var(--zinc-700);border-color:var(--b-3);color:#fff}
+  .btn.butter{background:var(--teal);color:#0c0e14;box-shadow:0 8px 20px -6px rgba(16,185,129,.45)}
+  .btn.butter:hover:not(:disabled){filter:brightness(1.08)}
+  .btn-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .link-btn{display:inline-flex;align-items:center;font-size:12px;font-weight:700;color:var(--accent);padding:6px 12px;border-radius:9px;background:var(--accent-soft);border:1px solid transparent;transition:all .18s}
+  .link-btn:hover:not(:disabled){background:var(--accent);color:#0c0e14}
+  .link-btn:disabled{opacity:.4;cursor:not-allowed}
+
+  /* Kartu Influencer Bar */
+  .cards-row{display:flex;gap:8px;overflow-x:auto;padding:2px 0 8px}
+  .icard{display:flex;align-items:center;gap:9px;padding:6px 14px 6px 6px;border-radius:999px;background:var(--well);border:1.5px solid var(--b-2);font-weight:700;font-size:12.5px;flex-shrink:0;color:var(--zinc-200);transition:all .2s}
+  .icard:hover{border-color:var(--c1)}
+  .icard img,.icard .plus{width:30px;height:30px;border-radius:50%;object-fit:cover;background:var(--zinc-800);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:var(--c1)}
+  .icard[aria-pressed=true] .plus{background:rgba(0,0,0,.15);color:#0c0e14}
+  .mini-actions{display:flex;flex-wrap:wrap;gap:8px}
+
+  /* Section Brief */
+  .bsec{border-top:1px solid var(--b-1);padding-top:18px;display:grid;gap:14px}
+  .bsec:first-of-type{border-top:0;padding-top:0}
+  .bsec h3{font-family:var(--body);font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);display:flex;align-items:center;gap:8px}
+  .bsec h3::before{content:"";width:10px;height:10px;border-radius:3px;background:var(--accent)}
+
+  /* Switch */
+  .switch{display:flex;align-items:flex-start;gap:12px;cursor:pointer;background:var(--well);border:1px solid var(--b-2);border-radius:14px;padding:13px 15px}
+  .switch input{appearance:none;-webkit-appearance:none;width:42px;height:24px;border-radius:999px;background:var(--zinc-700);position:relative;flex-shrink:0;transition:background .2s;cursor:pointer;margin-top:2px}
+  .switch input::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:transform .2s}
+  .switch input:checked{background:var(--c3)}
+  .switch input:checked::after{transform:translateX(18px);background:#0c0e14}
+  .switch b{display:block;font-size:13px;font-weight:700;color:#fff}
+  .switch span{font-size:12px;color:var(--zinc-400)}
+
+  /* Kotak Info, Error, Ok, Result */
+  .note-box{display:flex;gap:11px;align-items:flex-start;background:var(--teal-soft);border:1px solid rgba(16,185,129,.26);border-radius:14px;padding:13px 15px;font-size:13px;color:var(--zinc-300)}
+  .note-box b{color:var(--teal)}
+  .note-box svg{width:17px;height:17px;flex-shrink:0;margin-top:2px;stroke:var(--teal)}
+  .err{display:flex;gap:10px;align-items:flex-start;background:var(--red-bg);border:1px solid var(--red-b);color:var(--red);border-radius:12px;padding:12px 14px;font-size:13px;font-weight:600}
+  .ok{display:flex;gap:10px;align-items:center;background:var(--green-bg);border:1px solid var(--green-b);color:var(--green-t);border-radius:12px;padding:10px 14px;font-size:12.5px;font-weight:700}
+  .warn{color:var(--red)!important;font-weight:700}
+
+  .result-stage{position:relative;border-radius:16px;overflow:hidden;background:var(--well);border:1.5px solid var(--b-2);display:flex;align-items:center;justify-content:center;min-height:320px}
+  .result-stage img.ff-img{width:auto;max-width:100%;max-height:70vh;height:auto;cursor:zoom-in}
+  .empty{display:flex;flex-direction:column;align-items:center;gap:12px;padding:32px 18px;text-align:center;color:var(--zinc-500);font-size:13px}
+  .mini-grid{display:grid;gap:6px}
+  .mini-grid div{aspect-ratio:9/16;border-radius:8px;background:var(--zinc-800);border:1px solid var(--b-2);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-weight:700;color:var(--zinc-500)}
+
+  .loading{position:absolute;inset:0;background:rgba(12,14,20,.88);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;z-index:5;text-align:center;padding:20px}
+  .spinner{width:38px;height:38px;border-radius:50%;border:3.5px solid var(--b-2);border-top-color:var(--accent);animation:spin .9s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .loading b{font-size:13px;font-weight:700;color:#fff}
+  .loading small{color:var(--zinc-400);font-size:12px}
+
+  .versions{display:flex;gap:8px;overflow-x:auto;padding:12px 0 4px}
+  .versions button{position:relative;flex-shrink:0;width:68px;border-radius:10px;overflow:hidden;border:2px solid var(--b-2);opacity:.65}
+  .versions button[aria-current=true]{border-color:var(--c2);opacity:1}
+  .versions button span{position:absolute;top:4px;left:4px;background:rgba(12,14,20,.85);color:#fff;font-family:var(--mono);font-size:9px;padding:1px 5px;border-radius:5px}
+
+  .refs{display:flex;flex-wrap:wrap;gap:6px}
+  .refs span{font-size:11.5px;font-weight:600;padding:5px 11px;border-radius:999px;background:var(--well);border:1px solid var(--b-2);color:var(--zinc-500)}
+  .refs span.on{background:var(--green-bg);border-color:var(--green-b);color:var(--green-t)}
+
+  .ff-thumb{display:flex;gap:14px;align-items:center}
+  .ff-thumb img{width:80px;border-radius:12px;border:1px solid var(--b-2);cursor:zoom-in;flex-shrink:0}
+  .ff-thumb .t b{display:block;font-size:16px;color:#fff}
+  .ff-thumb .t span{font-size:12.5px;color:var(--zinc-400)}
+  .locked{display:flex;flex-wrap:wrap;gap:7px}
+  .locked div{display:inline-flex;gap:6px;align-items:center;font-size:11.5px;background:var(--well);border:1px solid var(--b-2);border-radius:9px;padding:5px 10px}
+  .locked span{font-size:11px;font-weight:700;color:var(--zinc-500)}
+  .locked span::before{content:"🔒 "}
+  .locked b{font-weight:700;color:#fff}
+
+  .prompt-out{white-space:pre-wrap;word-break:break-word;background:var(--well);border:1.5px solid var(--b-2);border-radius:14px;padding:16px;font-family:var(--mono);font-size:12.5px;line-height:1.65;color:var(--zinc-200);max-height:520px;overflow:auto}
+  .stage-sm{position:relative;min-height:110px}
+  .shots{display:grid;gap:10px}
+  .shot{display:flex;gap:12px;align-items:center;background:var(--well);border:1px solid var(--b-2);border-radius:12px;padding:9px}
+  .shot img{width:44px;border-radius:8px;flex-shrink:0}
+  .shot .t{min-width:0;flex:1;font-size:12px;color:var(--zinc-400)}
+  .shot .t b{display:block;font-size:12.5px;color:#fff}
+
+  .nav-next{display:flex;justify-content:flex-end;margin-top:20px}
+  .nav-next .btn{width:auto;min-width:260px;background:linear-gradient(135deg,var(--c1),var(--c2));color:#fff;box-shadow:0 8px 22px -6px rgba(236,72,153,.45)}
+  @media(max-width:560px){.nav-next .btn{width:100%}}
+
+  #lightbox{position:fixed;inset:0;background:rgba(8,10,15,.92);display:flex;align-items:center;justify-content:center;padding:16px;z-index:100;cursor:zoom-out}
+  #lightbox img{max-width:100%;max-height:92vh;border-radius:14px;background:#fff}
+  :focus-visible{outline:2.5px solid var(--accent);outline-offset:2px}
+
+  /* ═══ Gaya kolom baru: garis bawah, pita warna, ubin, pil ═══ */
+  #step1{--tone:var(--c1)} #step2{--tone:var(--c2)} #step3{--tone:var(--c3)}
+  #step1 .card,#step2 .card,#step3 .card{border:0;border-top:7px solid var(--tone);border-radius:6px 6px 28px 6px;padding:26px 26px 28px;box-shadow:0 26px 40px -28px rgba(0,0,0,.75)}
+  .card h2{font-size:22px;letter-spacing:-.02em}
+  .card .sub{padding-bottom:16px;border-bottom:1px dotted var(--zinc-600)}
+  #step1 .bsec h3,#step2 .bsec h3,#step3 .bsec h3,.bsec h3{display:inline-flex;width:max-content;background:var(--tone,var(--accent));color:#0c0e14;padding:5px 14px;border-radius:6px 14px 14px 6px;font-size:13px;letter-spacing:0;text-transform:none;font-weight:700}
+  #step1 .bsec h3::before,#step2 .bsec h3::before,#step3 .bsec h3::before,.bsec h3::before{display:none}
+  .label::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--tone,var(--accent));flex-shrink:0}
+  input[type=text],input[type=number]{background:transparent;border:0;border-bottom:2px solid var(--zinc-600);border-radius:0;padding:11px 2px 10px;font-size:16px}
+  input[type=text]:focus,input[type=number]:focus{background:linear-gradient(180deg,transparent 60%,rgba(255,255,255,.06));border-bottom-color:var(--tone,var(--accent));box-shadow:0 3px 0 0 var(--tone,var(--accent))}
+  textarea{background:rgba(255,255,255,.04);border:0;border-left:5px solid var(--tone,var(--accent));border-radius:4px 16px 16px 4px;padding:14px 16px;font-size:15px}
+  textarea:focus{background:var(--zinc-900);box-shadow:none;border-left-color:#fff}
+  .chip{border:0;border-radius:999px;background:rgba(255,255,255,.08);padding:10px 18px}
+  #step1 .chip[aria-pressed=true],#step2 .chip[aria-pressed=true],#step3 .chip[aria-pressed=true],.chip[aria-pressed=true]{background:var(--tone,var(--accent));color:#0c0e14;border:0;box-shadow:none}
+  .sugg button,.fixes button{border:0;border-radius:999px;background:rgba(255,255,255,.08);padding:7px 14px}
+  #step1 .sugg button[aria-pressed=true],#step2 .sugg button[aria-pressed=true],#step3 .sugg button[aria-pressed=true]{background:var(--tone);color:#0c0e14;border:0}
+  .slot{border:0;border-radius:30px 30px 30px 8px;background:linear-gradient(160deg,var(--zinc-700),var(--zinc-800));gap:10px}
+  #step1 .slot.req{border:0;background:linear-gradient(160deg,var(--c1-soft),var(--zinc-800) 75%)}
+  .slot:hover{background:linear-gradient(160deg,var(--zinc-600),var(--zinc-700));transform:translateY(-3px);box-shadow:0 16px 24px -16px rgba(0,0,0,.7)}
+  .slot .ic,#step1 .slot.req .ic{width:50px;height:50px;border:0;border-radius:16px;background:var(--tone,var(--accent))}
+  .slot .ic svg,#step1 .slot.req .ic svg{stroke:#0c0e14;stroke-width:2.4}
+  .slot:hover .ic{transform:rotate(-8deg) scale(1.08)}
+  .slot.filled{border:0}
+  .slot .tag{background:var(--tone,var(--accent));color:#0c0e14;border:0;font-weight:700}
+  .icard{border:0;border-radius:22px 22px 22px 6px;background:rgba(255,255,255,.07)}
+  .icard:hover{background:rgba(255,255,255,.13)}
+  .switch{border:0;border-left:5px solid var(--tone,var(--accent));border-radius:4px 18px 18px 4px;background:rgba(255,255,255,.04)}
+  .switch input{border-radius:8px;width:46px}
+  .lock{border:0;border-left:5px solid var(--tone,var(--accent));border-radius:4px 16px 16px 4px}
+  .note-box{border:0;border-left:5px solid var(--teal);border-radius:4px 16px 16px 4px}
+  .result-stage,.prompt-out{border:0;border-radius:6px 24px 24px 24px}
+  @media(max-width:640px){#step1 .card,#step2 .card,#step3 .card{padding:20px 18px 22px;border-radius:6px 6px 22px 6px}.chip{padding:9px 15px}}
+  :root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+  html{scroll-padding-top:env(safe-area-inset-top,0px)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- TOP COMMAND DECK: BRAND + STEPPER HORIZONTAL + SESI BARU -->
+  <aside class="sidebar-rail">
+    <nav class="nav">
+      <div class="brand">
+        <span class="mark" aria-hidden="true">J</span>
+        <div><b>Smart Tools</b><span>by Jaleee</span></div>
+      </div>
+      <button type="button" class="pill" id="resetBtn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
+        <span id="resetLabel">Sesi baru</span>
+      </button>
+    </nav>
+
+    <div class="steps" role="tablist">
+      <button type="button" class="step-tab" data-step="1"><span class="num" id="stepNum1">1</span><span><b>Siapkan Aset</b><small>Karakter · Produk</small></span></button>
+      <button type="button" class="step-tab" data-step="2"><span class="num" id="stepNum2">2</span><span><b>First Frame</b><small>Gambar pembuka video</small></span></button>
+      <button type="button" class="step-tab" data-step="3"><span class="num" id="stepNum3">3</span><span><b>Brief &amp; Prompt</b><small>Prompt video siap tempel</small></span></button>
+    </div>
+
+    <div class="rail-foot">Smart Tools by Jaleee · Studio UGC</div>
+  </aside>
+
+  <!-- ZONA UTAMA -->
+  <main class="main-stage">
+    <header class="head">
+      <div class="head-title-wrap">
+        <span class="eyebrow">Studio Influencer AI</span>
+        <h1>Smart Tools by Jaleee</h1>
+      </div>
+      <p>Simpan influencer kamu sebagai Kartu, buat first frame, lalu susun brief video sesuai kebutuhan. Wajah, produk, dan lokasi tetap konsisten dari video ke video.</p>
+    </header>
+
+    <details class="about">
+      <summary>Panduan Singkat 3 Langkah</summary>
+      <div class="about-body">
+        <p class="lead">Studio untuk membuat prompt video UGC (gaya rekaman HP) dengan wajah, produk, dan lokasi yang konsisten di <b>Google Flow</b>.</p>
+        <div class="about-grid three">
+          <div class="about-item"><h4>1. Siapkan Aset</h4><p>Unggah <b>Character Sheet</b> (wajib) serta Outfit/Expression jika ada. AI otomatis menyusun <b>Kunci Karakter</b>. Simpan sebagai Kartu agar bisa dipakai ulang.</p></div>
+          <div class="about-item"><h4>2. Buat First Frame</h4><p>Gabungkan karakter, produk, dan lokasi menjadi 1 gambar pembuka video, atau langsung unggah gambar yang sudah ada.</p></div>
+          <div class="about-item"><h4>3. Brief &amp; Prompt</h4><p>Isi tujuan, durasi, susunan adegan, dan dialog. Tekan <b>Generate Prompt Video</b> lalu tempel hasilnya ke Google Flow.</p></div>
+        </div>
+        <div class="about-note"><b>Versi Claude:</b> membaca foto karakter (Kunci Karakter) dan menulis prompt video dikerjakan Claude, dan Anda akan diminta izin saat pertama dipakai. Pembuatan gambar first frame tidak tersedia di sini, jadi unggah first frame buatan Anda sendiri di Langkah 2. Kartu dan draft tersimpan di browser ini; gunakan Ekspor kartu sebagai cadangan.</div>
+      </div>
+    </details>
+
+    <div id="canvasWarn" class="err" hidden><span><b>Alat ini hanya berjalan di Gemini Canvas.</b> Tampilan dan penyimpanan Kartu tetap bisa dicoba, tetapi tombol generate (Kunci Karakter, First Frame, Prompt Video) dinonaktifkan di luar Canvas. Tempel kode ini ke Canvas di gemini.google.com.</span></div>
+    <div id="globalErr" class="err" hidden></div>
+
+    <!-- ═════════════ LANGKAH 1: BENTO ATAS-BAWAH ═════════════ -->
+    <section id="step1" class="step-panel">
+      <div class="step1-layout">
+        <section class="card">
+          <h2><span class="num">1</span> Kartu Influencer</h2>
+          <p class="sub">Simpan sekali, pakai untuk semua video. Kartu inilah yang menjaga karakter kamu tetap konsisten.</p>
+          <div class="step1-top-split">
+            <!-- Sub-kolom kiri: Unggah Foto Karakter -->
+            <div class="stack">
+              <div>
+                <span class="label">Influencer tersimpan</span>
+                <div class="cards-row" id="cardsRow"></div>
+                <div class="mini-actions" style="margin-top:8px">
+                  <button type="button" class="link-btn" id="exportBtn">Ekspor kartu</button>
+                  <button type="button" class="link-btn" id="importBtn">Impor kartu</button>
+                  <button type="button" class="link-btn" id="deleteCardBtn" hidden>Hapus kartu</button>
+                </div>
+                <input type="file" id="importInput" accept="application/json,.json" hidden>
+              </div>
+              <div>
+                <div class="count"><span class="label" style="margin:0">Foto karakter</span><span class="badge" id="charBadge">0 / 3</span></div>
+                <div class="slots char" id="charSlots"></div>
+                <p class="hint">Character Sheet wajib. 2 slot lain opsional: grid Outfit dan Expression dari Persona Builder.</p>
+              </div>
+            </div>
+
+            <!-- Sub-kolom kanan: Identitas, Persona & Kunci Karakter -->
+            <div class="stack">
+              <div>
+                <label class="label" for="cardName">Nama influencer</label>
+                <input type="text" id="cardName" data-bind="card.name" placeholder="Contoh: Reno">
+              </div>
+              <div>
+                <label class="label" for="persona">Persona (opsional)</label>
+                <textarea id="persona" data-bind="card.persona" placeholder="Contoh: 26 tahun, content creator skincare. Ceria, bicaranya cepat dan ramah."></textarea>
+              </div>
+              <div>
+                <div class="row-between"><label class="label" for="charLock" style="margin:0">Kunci Karakter</label><button type="button" class="link-btn" id="lockBtn">Generate ulang</button></div>
+                <div class="stage-sm">
+                  <textarea id="charLock" data-bind="card.lock" style="min-height:115px" placeholder="Terisi otomatis setelah unggah Character Sheet."></textarea>
+                  <div class="loading" id="lockLoading" hidden><div class="spinner"></div><b>Membaca Character Sheet...</b></div>
+                </div>
+                <p class="hint">AI menulis otomatis dari Character Sheet dan grid, lalu diperbarui saat foto berubah. Dapat diedit manual dan AI tidak akan menimpanya.</p>
+              </div>
+              <div class="stack" style="gap:10px">
+                <button type="button" class="btn sm butter" id="saveCardBtn">Simpan Kartu Influencer</button>
+                <div id="cardMsg" class="ok" hidden></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Baris Bawah: Produk & Catatan Alur Kerja -->
+        <div class="step1-bottom">
+          <section class="card">
+            <h2><span class="num">2</span> Produk <span class="badge">Opsional</span></h2>
+            <p class="sub">Ada produk? Unggah di sini (paling akurat pakai hasil Product Sheet). Tidak ada produk? Lewati saja, aplikasi tetap berjalan.</p>
+            <div class="step1-top-split">
+              <div class="slots even two-cols" id="prodSlots"></div>
+              <div class="stack">
+                <div>
+                  <label class="label" for="prodName">Nama produk</label>
+                  <input type="text" id="prodName" data-bind="product.name" placeholder="Contoh: Sunscreen Gel SPF 50 isi 40 ml">
+                </div>
+                <div>
+                  <label class="label" for="prodNotes">Catatan produk (opsional)</label>
+                  <input type="text" id="prodNotes" data-bind="product.notes" placeholder="Contoh: tube putih, tutup biru muda, tulisan hijau di depan">
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <div class="stack">
+            <div class="note-box">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+              <span><b>Tips Persiapan:</b> Gunakan Character Sheet dengan tekstur kulit natural. Untuk pengaturan <b>Lokasi / Environment</b>, kamu bisa mengunggahnya di <b>Langkah 2</b> agar fleksibel untuk setiap video.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="nav-next"><button type="button" class="btn" data-go="2">Lanjut ke First Frame →</button></div>
+    </section>
+
+    <!-- ═════════════ LANGKAH 2: PREVIEW DI KIRI, KONTROL DI KANAN ═════════════ -->
+    <section id="step2" class="step-panel" hidden>
+      <div class="step2-layout">
+        <section class="card step2-preview" id="ffResultCard">
+          <h2><span class="num">✓</span> Cek First Frame</h2>
+          <p class="sub">Wajah, produk, dan lokasi harus terlihat realistis. Kalau belum sesuai, perbaiki dulu atau kembali ke Langkah 1.</p>
+          <div id="ffErr" class="err" hidden style="margin-bottom:14px"></div>
+          <div class="result-stage" id="ffStage">
+            <div class="empty" id="ffEmpty"><div class="mini-grid" style="width:62px;grid-template-columns:1fr"><div>1</div></div><span>First frame akan muncul di sini.</span></div>
+            <img class="ff-img" id="ffImg" alt="First frame" hidden>
+            <div class="loading" id="ffLoading" hidden><div class="spinner"></div><b id="ffLoadingTitle">Membuat first frame...</b><small>Biasanya 20–60 detik.</small></div>
+          </div>
+          <div class="versions" id="ffVersions" hidden></div>
+          <div id="ffAfter" hidden class="stack" style="gap:14px;margin-top:16px">
+            <div id="ffOk" class="ok"></div>
+            <div class="btn-row">
+              <button type="button" class="btn sm ghost" id="ffDlBtn">Unduh</button>
+              <button type="button" class="btn sm ghost" id="ffRegenBtn">Generate Ulang</button>
+            </div>
+            <div id="ffReviseBox" style="border-top:1px solid var(--b-1);padding-top:16px">
+              <span class="label">Revisi first frame</span>
+              <div class="fixes" id="ffFixes"></div>
+              <textarea id="ffRevision" placeholder="Contoh: produk dipegang tangan kanan, label menghadap kamera"></textarea>
+              <button type="button" class="btn sm" id="ffReviseBtn" style="margin-top:10px">Revisi</button>
+            </div>
+            <button type="button" class="btn" data-go="3">Pakai First Frame Ini →</button>
+          </div>
+        </section>
+
+        <section class="card step2-controls">
+          <h2><span class="num">2</span> First Frame</h2>
+          <p class="sub">Gabungkan karakter, produk, dan lokasi menjadi 1 gambar pembuka. Gambar ini menentukan pose, framing, dan pencahayaan video.</p>
+          <div class="stack">
+            <div class="chips" id="ffModeChips">
+              <button type="button" class="chip s" data-mode="ai" aria-pressed="true">Generate dengan AI</button>
+              <button type="button" class="chip s" data-mode="upload" aria-pressed="false">Saya sudah punya first frame</button>
+            </div>
+
+            <div id="ffAiBox" class="stack">
+              <div>
+                <span class="label">Referensi yang dipakai</span>
+                <div class="refs" id="ffRefs"></div>
+              </div>
+              <div>
+                <span class="label">Lokasi / environment (opsional)</span>
+                <div class="slots one" id="locSlots"></div>
+                <p class="hint">Unggah grid dari Background &amp; Scene atau 1 foto tempat. Kosongkan jika ingin AI memilih tempat yang cocok.</p>
+              </div>
+              <div>
+                <label class="label" for="ffScene">Adegan pembuka (opsional)</label>
+                <textarea id="ffScene" data-bind="ff.scene" placeholder="Contoh: duduk di sofa, pegang botol serum dekat dada, senyum ke kamera seperti baru mulai bicara"></textarea>
+                <div class="sugg" data-for="ff.scene"></div>
+                <p class="hint">Kosongkan jika ingin AI memilih momen pembuka yang natural.</p>
+              </div>
+              <div>
+                <span class="label">Framing</span>
+                <div class="chips" data-chips="ff.framing">
+                  <button type="button" class="chip s" data-val="Close-up">Close-up</button>
+                  <button type="button" class="chip s" data-val="Medium close-up">Medium close-up</button>
+                  <button type="button" class="chip s" data-val="Medium shot">Medium shot</button>
+                </div>
+              </div>
+            </div>
+
+            <div id="ffUpBox" class="stack" hidden>
+              <div class="slots one" id="ffUpSlot"></div>
+              <p class="hint" style="margin:0">Sudah buat first frame sendiri? Langsung unggah di sini.</p>
+            </div>
+
+            <div>
+              <span class="label">Mode kamera</span>
+              <div class="chips" data-chips="ff.camMode" id="camChips"></div>
+              <p class="hint" id="camHint"></p>
+            </div>
+            <div>
+              <span class="label">Rasio</span>
+              <div class="chips" data-chips="ff.ratio">
+                <button type="button" class="chip s" data-val="9:16"><span class="shape" style="width:10px;height:16px"></span>9:16</button>
+                <button type="button" class="chip s" data-val="16:9"><span class="shape" style="width:16px;height:10px"></span>16:9</button>
+                <button type="button" class="chip s" data-val="1:1"><span class="shape" style="width:13px;height:13px"></span>1:1</button>
+              </div>
+            </div>
+            <div id="ffGenWrap">
+              <button type="button" class="btn" id="ffGenBtn">Generate First Frame</button>
+              <p class="hint" style="text-align:center" id="ffHint"></p>
+            </div>
+            <div class="note-box">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+              <span>Pilihan di langkah ini (lokasi, adegan pembuka, mode kamera, framing, dan rasio) akan <b>dikunci</b> di Langkah 3 supaya prompt video sesuai dengan first frame.</span>
+            </div>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <!-- ═════════════ LANGKAH 3: DIRECTOR DESK (BRIEF KIRI + OUTPUT STACK KANAN) ═════════════ -->
+    <section id="step3" class="step-panel" hidden>
+      <div class="step3-layout">
+        <!-- Kolom Kanan Atas: Ringkasan First Frame & Pengaturan Terkunci -->
+        <section class="card step3-banner-col">
+          <h2><span class="num">1</span> First Frame &amp; Pengaturan Terkunci</h2>
+          <div id="p3NoFF" class="stack" style="gap:12px;margin-top:12px">
+            <p class="sub" style="margin:0;border:0;padding:0">Belum ada first frame. Buat di Langkah 2, atau langsung unggah di sini.</p>
+            <div class="btn-row">
+              <button type="button" class="btn sm ghost" data-go="2">Ke Langkah 2</button>
+              <button type="button" class="btn sm ghost" id="p3UploadBtn">Unggah</button>
+            </div>
+          </div>
+          <div id="p3FF" class="ff-banner" style="margin-top:12px" hidden>
+            <div class="ff-thumb">
+              <img id="p3FFImg" alt="First frame terpilih">
+              <div class="t"><b id="p3Name">Influencer</b><span id="p3Meta"></span><div style="margin-top:8px"><button type="button" class="link-btn" data-go="2">Ubah di Langkah 2</button></div></div>
+            </div>
+            <div class="locked" id="lockedList"></div>
+          </div>
+        </section>
+
+        <div class="step3-cols">
+          <section class="card step3-brief-col">
+            <h2><span class="num">2</span> Brief Video</h2>
+            <p class="sub">Isi sesuai kebutuhanmu. Semua bagian bebas ditulis, sedangkan tombol saran di bawah kotak hanya sebagai pembantu.</p>
+            <div class="stack">
+
+              <div class="bsec">
+                <h3>Brief</h3>
+                <div>
+                  <label class="label" for="bTujuan">Tujuan video</label>
+                  <input type="text" id="bTujuan" data-bind="brief.tujuan" placeholder="Contoh: review jujur serum setelah seminggu pakai">
+                  <div class="sugg" data-for="brief.tujuan"></div>
+                </div>
+                <div>
+                  <span class="label">Versi Omni</span>
+                  <div class="chips" data-chips="brief.omniVer">
+                    <button type="button" class="chip s" data-val="1.1">Omni 1.1</button>
+                    <button type="button" class="chip s" data-val="1.2">Omni 1.2</button>
+                  </div>
+                  <p class="hint" id="omniVerHint"></p>
+                </div>
+                <div>
+                  <span class="label">Mode Referensi Google Flow</span>
+                  <div class="chips" data-chips="brief.refMode">
+                    <button type="button" class="chip s" data-val="omni">Semua Aset (Wajah + Produk + Lokasi)</button>
+                    <button type="button" class="chip s" data-val="start">First Frame Saja</button>
+                  </div>
+                  <p class="hint" id="refModeHint"></p>
+                </div>
+                <div>
+                  <span class="label">Durasi (detik)</span>
+                  <div class="chips" data-chips="brief.durasi" id="durChips">
+                    <button type="button" class="chip s" data-val="4">4</button>
+                    <button type="button" class="chip s" data-val="6">6</button>
+                    <button type="button" class="chip s" data-val="8">8</button>
+                    <button type="button" class="chip s" data-val="10">10</button>
+                    <button type="button" class="chip s" data-val="12" data-only="1.2">12</button>
+                    <button type="button" class="chip s" data-val="15" data-only="1.2">15</button>
+                  </div>
+                  <p class="hint" id="durHint"></p>
+                </div>
+              </div>
+
+              <div class="bsec">
+                <h3>Susunan adegan (dalam 1 shot)</h3>
+                <div>
+                  <textarea id="bSusunan" data-bind="brief.susunan" style="min-height:110px" placeholder="0–3 detik: senyum ke kamera sambil angkat botol serum dekat dada&#10;3–7 detik: putar label botol ke arah lensa, jelaskan manfaat utamanya&#10;7–10 detik: mengangguk yakin dan tersenyum ramah di akhir"></textarea>
+                  <div class="sugg"><button type="button" id="timelineBtn">+ Isi kerangka waktu sesuai durasi</button></div>
+                </div>
+              </div>
+
+              <div class="bsec">
+                <h3>Karakter</h3>
+                <div>
+                  <label class="label" for="bAksi">Aksi dan ekspresi</label>
+                  <textarea id="bAksi" data-bind="brief.aksi" placeholder="Contoh: mulai dengan senyum, angkat produk dekat kamera, mengangguk yakin"></textarea>
+                  <div class="sugg" data-for="brief.aksi"></div>
+                </div>
+                <div id="interaksiWrap">
+                  <label class="label" for="bInteraksi">Interaksi dengan produk</label>
+                  <input type="text" id="bInteraksi" data-bind="brief.interaksi" placeholder="Contoh: putar botol tunjukkan label, teteskan serum ke tangan">
+                  <div class="sugg" data-for="brief.interaksi"></div>
+                </div>
+              </div>
+
+              <div class="bsec">
+                <h3>Dialog</h3>
+                <div>
+                  <textarea id="bDialog" data-bind="brief.dialog" placeholder="Tulis kalimat yang diucapkan influencer. Kosongkan jika ingin AI yang menulis. Tulis 'tidak ada' untuk video tanpa dialog."></textarea>
+                  <p class="hint" id="dialogHint"></p>
+                </div>
+                <div>
+                  <span class="label">Gaya bicara</span>
+                  <div class="chips" data-chips="brief.gayaCakap" id="gayaChips"></div>
+                  <input type="text" id="bGaya" data-bind="brief.gayaCakap" placeholder="Atau tulis sendiri, contoh: seperti kakak memberi nasihat" style="margin-top:10px">
+                  <p class="hint" id="gayaHint"></p>
+                </div>
+                <div>
+                  <span class="label">Bahasa dialog</span>
+                  <div class="chips" data-chips="brief.bahasa">
+                    <button type="button" class="chip s" data-val="ID">Bahasa Indonesia</button>
+                    <button type="button" class="chip s" data-val="EN">English</button>
+                  </div>
+                </div>
+              </div>
+
+              <label class="switch"><input type="checkbox" id="bAuto" data-bind="brief.autofill"><span><b>Biarkan AI melengkapi bagian kosong</b>AI mengisi berdasarkan first frame, persona, dan tujuan video. Matikan jika ingin AI hanya mengikuti apa yang kamu tulis.</span></label>
+
+              <button type="button" class="link-btn" id="saveStyleBtn" style="justify-self:start">Simpan Pengaturan Brief ke Kartu</button>
+            </div>
+          </section>
+
+          <div class="stack step3-right-stack">
+            <section class="card">
+              <h2><span class="num">3</span> Prompt Video</h2>
+              <p class="sub">Prompt ditulis dalam bahasa Inggris dengan dialog sesuai bahasa pilihan. Langsung tempel ke Google Flow.</p>
+              <div id="pErr" class="err" hidden style="margin-bottom:14px"></div>
+              <button type="button" class="btn" id="promptBtn">Generate Prompt Video</button>
+              <p class="hint" style="text-align:center" id="promptHint"></p>
+              <div class="stage-sm" style="margin-top:14px" id="pStage">
+                <div class="loading" id="pLoading" hidden><div class="spinner"></div><b id="pLoadingTitle">Menulis prompt...</b><small>Biasanya 10–30 detik.</small></div>
+                <div id="pEmpty" class="empty" style="padding:18px"><span>Prompt video akan muncul di sini.</span></div>
+                <div id="pOut" hidden class="stack" style="gap:12px">
+                  <div class="versions" id="pVersions" hidden style="padding-top:0"></div>
+                  <div id="pNota" class="ok"></div>
+                  <div id="pUpload" class="note-box" style="font-size:13px"></div>
+                  <div class="row-between" style="margin:0"><span class="label" style="margin:0" id="pLabel">Prompt</span><button type="button" class="link-btn" id="copyPromptBtn">Salin prompt</button></div>
+                  <div class="prompt-out" id="pText"></div>
+                </div>
+              </div>
+              <div id="pAfter" hidden class="stack" style="gap:12px;margin-top:16px;border-top:1px solid var(--b-1);padding-top:16px">
+                <span class="label" style="margin:0">Revisi prompt</span>
+                <p class="hint" style="margin:0">AI akan mempertahankan semua bagian dan hanya mengubah bagian yang kamu tulis.</p>
+                <div class="fixes" id="pFixes" style="margin:0"></div>
+                <textarea id="pRevision" placeholder="Contoh: dialog lebih pendek, tambahkan dia tertawa kecil di akhir"></textarea>
+                <button type="button" class="btn sm" id="pReviseBtn">Revisi</button>
+              </div>
+            </section>
+
+            <section class="card">
+              <h2><span class="num">4</span> Shot Berikutnya</h2>
+              <p class="sub">1 first frame = 1 shot. Untuk shot berikutnya, buat first frame baru. Kartu influencer, produk, lokasi, dan gaya brief tetap tersimpan.</p>
+              <button type="button" class="btn sm butter" id="nextShotBtn">+ Buat Shot Berikutnya</button>
+              <div id="shotsWrap" hidden style="margin-top:16px">
+                <span class="label">Shot dalam sesi ini</span>
+                <div class="shots" id="shots"></div>
+              </div>
+            </section>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<input type="file" id="fileInput" accept="image/*" hidden>
+<div id="lightbox" hidden><img id="lightboxImg" alt="Pratinjau"></div>
+
+<script>
+// ───────────────────────── CONFIG ─────────────────────────
+const apiKey = ""; // Dibiarkan kosong: diisi otomatis oleh Gemini Canvas. Jangan isi manual.
+// Alat ini hanya untuk Gemini Canvas, yang menampilkan halaman di dalam iframe.
+// Di luar Canvas (misalnya file dibuka langsung di peramban), semua panggilan AI diblokir.
+const IN_CANVAS = true; // versi Claude: AI lewat kemampuan sample, bukan Gemini
+const IMAGE_MODELS = ["gemini-3.1-flash-image-preview", "gemini-3.1-flash-image", "gemini-2.5-flash-image-preview"];
+const TEXT_MODELS = ["gemini-2.5-flash-preview-09-2025", "gemini-2.5-flash"];
+
+const DURATION_STEPS = [4, 6, 8, 10];
+const DURATION_STEPS_12 = [4, 6, 8, 10, 12, 15];
+const WORDS_PER_SEC = 2.2;
+
+// Mode kamera: kalimat baku untuk prompt video Google Flow
+const CAM_MODES = {
+  "Handheld selfie": {
+    hint: "Lengan kanan memegang kamera, keluar dari bawah frame. Hanya tangan kiri yang bergerak.", selfie: true,
+    first: "Slight natural handheld camera shake.",
+    camera: "HANDHELD SELFIE STYLE. Shot on iPhone 15 Pro Max front camera. Candid framing, authentic raw social media snapshot.",
+    vc: "HANDHELD SELFIE STYLE",
+    lock: "One continuous handheld selfie take from the first frame to the last. The camera is held in her extended right arm, which leaves the frame at the bottom edge. The phone itself is NEVER visible in frame. Her right arm stays raised and holds the camera at the same arm's-length distance for the entire clip; she never lowers it, never puts the camera down, never switches hands, and the shot never becomes a tripod, propped, or third-person shot. Only her left hand gestures.",
+    neg: "visible phone, phone appearing in frame, phone in hand, lowering the camera, putting the camera down, switching hands, both hands free, camera cut, angle change, third-person view"
+  },
+  "Tripod": {
+    hint: "Kamera statis di atas tripod. Talent tidak memegang HP.",
+    first: "Perfectly static camera on a tripod, no movement.",
+    camera: "Shot on iPhone 15 Pro Max mounted on a simple tripod. Raw unedited smartphone photo, authentic everyday creator setup.",
+    vc: "Shot on iPhone 15 Pro Max mounted on a simple tripod",
+    lock: "One continuous static take from a fixed tripod, from the first frame to the last. The camera never moves and never becomes handheld or selfie. She is not holding a phone; no phone is visible anywhere in frame.",
+    neg: "visible phone, phone in hand, holding a phone, selfie arm, camera movement, handheld shake, camera cut, angle change"
+  },
+  "Walking selfie": {
+    hint: "Selfie sambil berjalan. Hanya tangan kiri yang bergerak.", selfie: true,
+    first: "Natural walking bob with slight handheld camera shake.",
+    camera: "HANDHELD WALKING SELFIE STYLE. Shot on iPhone 15 Pro Max front camera. Candid framing, authentic raw social media snapshot.",
+    vc: "HANDHELD WALKING SELFIE STYLE",
+    lock: "One continuous handheld walking selfie take from the first frame to the last. The camera is held in her extended right arm, which leaves the frame at the bottom edge. The phone itself is NEVER visible in frame. Her right arm stays raised and holds the camera at the same arm's-length distance for the entire clip while she walks; she never lowers it, never puts the camera down, never switches hands, and the shot never becomes a static or third-person shot. Only her left hand gestures.",
+    neg: "visible phone, phone appearing in frame, phone in hand, lowering the camera, putting the camera down, switching hands, both hands free, camera cut, angle change, third-person view"
+  },
+  "HP disandarkan": {
+    hint: "HP disandarkan di meja, hampir statis. Kedua tangan bebas.",
+    first: "Almost static camera with very subtle natural micro-movement.",
+    camera: "Shot on iPhone 15 Pro Max propped on a table. Raw unedited smartphone photo, authentic everyday creator setup.",
+    vc: "Shot on iPhone 15 Pro Max propped on a table",
+    lock: "One continuous take from a camera propped on the table, from the first frame to the last. The camera stays in the same spot and never becomes handheld or selfie. She is not holding a phone; no phone is visible anywhere in frame.",
+    neg: "visible phone, phone in hand, holding a phone, selfie arm, camera repositioning, camera cut, angle change"
+  },
+  "Dipegang teman": {
+    hint: "Direkam oleh teman di depan talent. Temannya tidak terlihat.",
+    first: "Slight natural handheld camera shake, filmed by a friend.",
+    camera: "HANDHELD STYLE, filmed by a friend. Shot on iPhone 15 Pro Max rear camera. Candid framing, authentic raw social media snapshot.",
+    vc: "HANDHELD STYLE, filmed by a friend",
+    lock: "One continuous handheld take filmed by a friend standing in front of her, from the first frame to the last. The friend is never visible. Her hands are free; she is not holding a phone, and no phone is visible anywhere in frame. The shot never becomes a selfie.",
+    neg: "visible phone, phone in hand, holding a phone, selfie arm, friend visible, camera cut, angle change"
+  }
+};
+const camMode = () => CAM_MODES[S.ff.camMode] || CAM_MODES["Handheld selfie"];
+const genderize = (t, male) => male ? t.replace(/\bShe\b/g, "He").replace(/\bshe\b/g, "he").replace(/\bHer\b/g, "His").replace(/\bher\b/g, "his") : t;
+
+const OMNI_FACE_LOCK = "CRITICAL FACE & IDENTITY LOCK: You MUST use the provided reference image to lock the character's face. The character in the video MUST be an EXACT CLONE of the reference face, including gender, skin tone, hair, and facial structure. DO NOT invent a new face. DO NOT change the clothing.";
+const OMNI_REALISM_LOCK = "CRITICAL REALISM LOCK: The generated video MUST be ultra-realistic, highly detailed live-action footage. ZERO AI VIBE. Include natural lived-in imperfections, highly detailed human skin texture, and realistic lighting. STRICTLY NO 3D renders, no plastic skin, no cartoon or illustration styles.";
+const OMNI_TEXT_LOCK = "CRITICAL NO TEXT LOCK: Clean footage with absolutely no text on screen at any moment. No subtitles, no captions, no burned-in dialogue text, no titles, no labels, no social media interface, no stickers, no emojis, no watermark. The dialogue is spoken audio only and is never written on screen.";
+const OMNI_NEG_BASE = "3d render, animation, ai look, plastic smooth skin, different face, changing identity, changing clothes, morphing, text overlays, subtitles, captions, burned-in captions, on-screen text, words, letters, typography, titles, lower thirds, social media UI, stickers, emojis, watermarks, bad anatomy, bokeh, blurred background, shallow depth of field, portrait mode";
+
+const SUGG = {
+  "ff.scene": ["Pegang produk dekat dada, senyum ke kamera", "Selfie handheld, baru mau mulai bicara", "Duduk santai, produk di meja depan"],
+  "brief.tujuan": ["Honest Review", "Problem & Solution", "Unboxing", "Tutorial / Cara Pakai", "Racun / Promo", "Storytelling", "Spill Produk"],
+  "brief.aksi": ["Senyum, angkat produk dekat kamera", "Coba produk, reaksi puas", "Bicara santai sambil mengangguk"],
+  "brief.interaksi": ["Putar produk tunjukkan label", "Buka tutup dan coba sedikit", "Pakai produk di kulit / tangan"],
+};
+const PRODUCT_ONLY_SUGG = new Set([
+  "Pegang produk dekat dada, senyum ke kamera",
+  "Duduk santai, produk di meja depan",
+  "Senyum, angkat produk dekat kamera",
+  "Coba produk, reaksi puas"
+]);
+
+const FF_FIXES = [
+  "Wajah tidak sama — samakan wajah 100% dengan referensi karakter",
+  "Produk berubah — samakan bentuk, warna, dan label dengan referensi produk",
+  "Label menghadap kamera — putar produk agar label depan menghadap kamera dan teksnya jelas",
+  "Terlihat AI — kulit lebih natural dengan tekstur, cahaya seperti rekaman HP",
+  "Tangan aneh — perbaiki tangan dan jari supaya natural",
+  "Pose lebih santai — ubah pose agar tidak kaku, seperti sedang mengobrol santai",
+  "Ekspresi siap bicara — buat ekspresi lebih hidup, tersenyum natural seperti baru mulai bicara",
+  "Lokasi berubah — samakan latar dengan referensi lokasi"
+];
+// Gaya bicara: label -> kalimat suara baku dalam prompt video
+const VOICE_STYLES = {
+  "Santai": { hint: "Seperti mengobrol dengan teman dekat.", en: "a relaxed, casual voice, like chatting with a close friend, with natural pauses" },
+  "Jujur & tenang": { hint: "Tenang dan tulus. Cocok untuk honest review.", en: "a calm, sincere voice with steady pacing, like giving an honest personal review" },
+  "Antusias": { hint: "Seperti baru menemukan sesuatu yang keren. Cocok untuk unboxing.", en: "an excited, genuinely thrilled voice with rising intonation, as if just discovering something great" },
+  "Meyakinkan": { hint: "Yakin dan tegas pada poin penting, tidak terdengar seperti iklan.", en: "a confident, steady voice with clear emphasis on key words, persuasive but not salesy" },
+  "Bertenaga": { hint: "Ceria, sedikit cepat, intonasi hidup. Cocok untuk hook promo.", en: "an upbeat, energetic voice with a slightly faster tempo and lively intonation" },
+  "Edukasi / Penjelas": { hint: "Jelas, runtut, dan mudah diikuti. Cocok untuk tutorial.", en: "a clear, helpful, well-paced explanatory voice, as if demonstrating a practical tip" },
+  "Spill / Rahasia": { hint: "Pelan dan dekat, seperti membocorkan produk andalan.", en: "a soft, slightly lowered, intimate voice, as if sharing a secret recommendation with a friend" },
+  "Lucu": { hint: "Bercanda ringan, ada nada tersenyum saat bicara.", en: "a playful, teasing voice with light humour and a hint of a laugh" }
+};
+const voiceKey = () => { const v = String(S.brief.gayaCakap || "").trim().toLowerCase(); return Object.keys(VOICE_STYLES).find(k => k.toLowerCase() === v) || null; };
+const voicePreset = () => { const k = voiceKey(); return k ? VOICE_STYLES[k].en : null; };
+
+const PROMPT_FIXES = [
+  "Dialog pendek — pendekkan dialog supaya muat dengan durasi",
+  "Kurangi gerakan — kurangi gerakan agar tetap natural seperti rekaman HP",
+  "Lebih bertenaga — naikkan energi bicara dan ekspresi",
+  "Lebih santai — bicara lebih santai seperti mengobrol dengan teman"
+];
+
+const FRIENDLY_ERRORS = {
+  safety: "AI menolak permintaan ini karena filter keamanan. Coba foto lain atau ubah kalimatnya.",
+  noimage: "AI tidak mengembalikan gambar kali ini. Tekan Generate Ulang untuk mencoba lagi.",
+  model: "Model gambar belum tersedia untuk akun ini.",
+  quota: "Batas pemakaian AI sedang tercapai. Tunggu beberapa menit, lalu coba lagi.",
+  failed: "Gagal memproses permintaan. Silakan coba lagi.",
+  canvas: "Fitur AI hanya berjalan di Gemini Canvas. Buka alat ini lewat Canvas di gemini.google.com."
+};
+
+// ───────────────────────── PROMPT: KUNCI KARAKTER ─────────────────────────
+function buildLockPrompt(count) {
+  return `You are looking at ${count > 1 ? count + " reference images of ONE AI influencer (the same person in every image; some images may be grids of outfits or expressions)" : "1 reference photo of an AI influencer"}. Describe this person so they can be recreated consistently in AI image and video prompts.
+Return ONLY valid JSON in this exact format:
+{"lock": "..."}
+"lock": one English paragraph of 60 to 90 words, written as a ready-to-paste prompt block that starts with "CHARACTER:". Describe the apparent age range, face shape, eyes, eyebrows, nose, lips, skin tone and skin texture, hair or head covering, body build, the main outfit and accessories. Describe only what is visible. No names and no personality.`;
+}
+
+// ───────────────────────── PROMPT: FIRST FRAME ─────────────────────────
+const FRAMING_EN = {
+  "Close-up": "close-up (face and shoulders)",
+  "Medium close-up": "medium close-up (from the chest up)",
+  "Medium shot": "medium shot (from the waist up)"
+};
+
+const DOF_SELFIE = "Slight wide-angle front-camera perspective. Real phone front-camera depth of field: everything from the face to the background is in focus and stays sharp and clearly visible. No bokeh, no portrait mode, no background blur, no shallow depth of field. Not a DSLR or mirrorless camera look.";
+const DOF_MAIN = "Real phone main-camera depth of field: the person and the background are all in focus. No bokeh, no portrait mode, no background blur, no shallow depth of field. Not a DSLR or mirrorless camera look.";
+const CAM_FF = {
+  "Handheld selfie": `handheld selfie with the front camera. The influencer's right arm reaches toward the camera and leaves the frame at the bottom edge; the phone is not visible. Only the left hand is free. ${DOF_SELFIE}`,
+  "Walking selfie": `walking selfie with the front camera, caught mid-step. The influencer's right arm reaches toward the camera and leaves the frame at the bottom edge; the phone is not visible. Only the left hand is free. ${DOF_SELFIE}`,
+  "Tripod": `static camera on a tripod at chest or eye height, a few steps away. The influencer is not holding a phone and no phone is visible anywhere in frame. ${DOF_MAIN}`,
+  "HP disandarkan": `camera propped on a table in front of the influencer, slightly below eye level. The influencer is not holding a phone and no phone is visible anywhere in frame. ${DOF_MAIN}`,
+  "Dipegang teman": `handheld by a friend standing in front of the influencer (the friend is never visible). The influencer's hands are free; not holding a phone, and no phone is visible anywhere in frame. ${DOF_MAIN}`
+};
+
+function buildFirstFramePrompt(n) {
+  const c = S.card, p = S.product, f = S.ff;
+  const refs = [];
+  if (n.char) refs.push(`- "Character reference" images (${n.char}): the influencer${c.name.trim() ? ` (${c.name.trim()})` : ""}. Some may be grids of outfits or expressions of the same person. Keep the exact same face, facial features, skin tone, hair, body and outfit. It must be recognisably the same real person.`);
+  if (n.prod) refs.push(`- "Product reference" images (${n.prod}): the product${p.name.trim() ? ` (${p.name.trim()})` : ""}. Keep its exact shape, colors, label, logo, text on the pack and proportions. Do not redesign it.`);
+  if (n.loc) refs.push(`- "Location reference" image: the place (it may be a 2 x 2 grid of the same place). Keep the same layout, furniture, materials, colors and light.`);
+  const locks = [c.lock.trim(), (p.name.trim() || p.notes.trim()) ? `PRODUCT: ${[p.name.trim(), p.notes.trim()].filter(Boolean).join(" — ")}` : ""].filter(Boolean);
+  const scene = f.scene.trim() || (n.prod
+    ? "A natural opening moment: the influencer is in the location, holding the product casually in a free hand near the chest, looking at the camera as if about to start talking."
+    : "A natural opening moment: the influencer is in the location, looking at the camera as if about to start talking.");
+  return `Create the FIRST FRAME of a 1-shot smartphone video (UGC / influencer style). This image is the exact opening frame of the video, so it must look like a real, unedited frame captured on a phone.
+
+References provided:
+${refs.join("\n")}
+${locks.length ? `
+Consistency notes (follow exactly):
+${locks.join("\n")}
+` : ""}
+Opening moment (from the user, may be in Indonesian): ${scene}${c.persona.trim() ? `
+Persona of the influencer (may be in Indonesian, use it only for expression and body language): ${c.persona.trim()}` : ""}
+Framing: ${FRAMING_EN[f.framing] || f.framing}. The image has a ${f.ratio} aspect ratio.${n.loc ? "" : `
+Location: a natural, believable everyday place in Indonesia that fits the persona (for example a home, a bedroom or a cafe), unless the opening moment says otherwise.`}
+Camera mode: ${CAM_FF[f.camMode] || CAM_FF["Handheld selfie"]}
+
+Pose:
+- Natural mid-action pose: weight on one leg or sitting sideways or leaning, body turned 3/4, shoulders not symmetrical, head slightly tilted
+- One hand in the middle of a movement (touching the hair, touching the product, or a half-finished explaining gesture)
+- Mid-sentence expression: mouth slightly open, eyebrows moving, a half smile; eyes on the lens
+- Not allowed: standing straight and symmetrical facing the camera, both arms straight at the sides, arms folded neatly, frozen catalogue smile
+
+Style:
+- Ultra realistic frame from a modern smartphone video (iPhone 15 Pro Max), natural available light, true-to-life colors
+- Raw, unedited look: real phone-camera compression, mild noise in the shadows, natural auto-exposure and white balance
+- Natural skin texture with visible pores, subtle facial asymmetry, no beauty filter, no plastic or over-smoothed skin
+- Any product is held naturally, with correct real-world size relative to the hands and face
+
+Avoid:
+- Changing the face, outfit, product or location from the references
+- Any text, captions, subtitles, UI overlays, added logos or watermarks
+- CGI, 3D render, illustration, cartoon or painting look
+- Extra or distorted fingers, duplicated products or duplicated people
+- Bokeh, background blur or a DSLR look; the word soft only ever applies to light
+- Cinematic advert lighting or a studio backdrop (unless the location reference is a studio)
+- Other people near the influencer; background people, if any, are far away and small, but still in focus`;
+}
+
+function buildFFRevisionPrompt(basePrompt, note) {
+  return `REVISION OF THE EXISTING FIRST FRAME.
+The image labeled "Previous result" is the current first frame.
+Apply ONLY this change (the request may be in Indonesian): ${note}
+Keep everything the change does not mention exactly as it is in the previous result: same person, outfit, product, location, pose, framing and light. The result must still follow all the rules below.
+
+${basePrompt}`;
+}
+
+// ───────────────────────── PROMPT: BRIEF VIDEO ─────────────────────────
+const AI_FILL = "[AI tentukan]", NONE = "(tidak ada)";
+
+function beats(d) {
+  const x = Math.max(1, Math.round(d * 0.3)), y = Math.max(x + 1, Math.round(d * 0.7));
+  return [[0, x], [x, y], [y, d]];
+}
+
+function buildBrief() {
+  const b = S.brief, c = S.card, p = S.product;
+  const fill = (s) => (s || "").trim() || (b.autofill ? AI_FILL : NONE);
+  const d = Number(b.durasi) || 10;
+  const hasProduct = !!(p.name.trim() || p.photos.some(Boolean));
+  const susunan = b.susunan.trim().split("\n").map(l => /(saat|detik)\s*:\s*$/i.test(l) ? `${l.trim()} ${b.autofill ? AI_FILL : NONE}` : l).join("\n") || (b.autofill ? beats(d).map(([a, z]) => `${a}–${z} detik: ${AI_FILL}`).join("\n") : NONE);
+  const rawDialog = b.dialog.trim();
+  const dialog = /^(tiada|tak ada|tidak ada|nggak ada|gak ada|none|-)$/i.test(rawDialog) ? NONE
+    : rawDialog ? `"${rawDialog.replace(/^["“]+|["”]+$/g, "")}"` : (b.autofill ? AI_FILL : NONE);
+  const L = lockedVals();
+  const openScene = L.scene;
+  const interaksi = b.interaksi.trim() || (hasProduct ? (b.autofill ? AI_FILL : NONE) : "(tidak ada produk)");
+  const ref = [
+    c.name.trim() ? `Nama influencer: ${c.name.trim()}` : "",
+    c.persona.trim() ? `Persona: ${c.persona.trim()}` : "",
+    c.lock.trim(),
+    hasProduct ? `Produk: ${[p.name.trim() || "produk dalam first frame", p.notes.trim()].filter(Boolean).join(" — ")}` : "",
+    locUsed() ? "Foto lokasi dilampirkan: environment dan lighting harus sama dengan tempat di foto itu." : ""
+  ].filter(Boolean);
+
+  return `Saya mengunggah first frame untuk video AI. Buatkan prompt video berdasarkan first frame ini dan brief di bawah.
+
+BRIEF
+Tujuan video: ${fill(b.tujuan)}
+Video model: Google Flow
+Jenis referensi: ${omniRef() ? "Semua Aset (Omni Reference)" : "Start Frame Saja"}
+Durasi: ${d} detik
+Rasio: ${L.ratio}
+
+SUSUNAN ADEGAN (DALAM 1 SHOT)
+${openScene ? `Mulai dari first frame: ${openScene}\n` : ""}${susunan}
+
+KARAKTER
+Aksi dan ekspresi: ${fill(b.aksi)}
+Interaksi dengan produk: ${interaksi}
+
+KAMERA (dikunci sesuai first frame)
+Gaya: ${L.camMode}
+Framing: ${L.framing || "sesuai first frame"}
+
+DIALOG
+${dialog}
+Gaya bicara: ${fill(b.gayaCakap)}
+${ref.length ? `
+REFERENSI KONSISTENSI (jangan diubah)
+${ref.join("\n")}
+` : ""}
+ATURAN
+- Pakai first frame sebagai titik awal video. Jangan ubah wajah karakter, produk, outfit, dan lokasi.
+- Semua gerakan dan pergerakan kamera harus masuk akal dari kondisi awal first frame.
+- Video ini adalah 1 shot. Jangan ganti lokasi, angle, atau adegan di tengah video.
+- Hasil harus terlihat realistis seperti direkam pakai HP, bukan iklan cinematic.
+- Tulis prompt dalam bahasa Inggris. Dialog tetap dalam Bahasa Indonesia (atau English, sesuai pilihan saya).
+- Sesuaikan panjang dan format prompt dengan Google Flow.
+
+CATATAN
+- Pilihan bahasa dialog saya: ${b.bahasa === "EN" ? "English" : "Bahasa Indonesia"}.
+- Bagian bertanda ${AI_FILL}: tentukan sendiri sesuai first frame, persona, dan tujuan video. Bagian bertanda ${NONE}: jangan ditambah.`;
+}
+
+function outputSpec() {
+  const en = S.brief.bahasa === "EN";
+  const lang = en ? "natural casual English" : "natural casual everyday Indonesian (Bahasa Indonesia sehari-hari, not formal, not Malaysian Malay)";
+  const d = Number(S.brief.durasi) || 10;
+  const maxW = Math.max(4, Math.floor((d - 0.8) * WORDS_PER_SEC));
+  const L = lockedVals(), m = CAM_MODES[L.camMode] || CAM_MODES["Handheld selfie"];
+  const hands = m.selfie
+    ? "Selfie mode: maximum 2 gestures, all with the left hand, no two-handed gestures (no counting with two hands, no holding the product with both hands, no opening things); the left hand always comes back down slowly."
+    : "The person is not holding a phone; if a hand touches something, name the object clearly.";
+  const common = `
+- "pronoun": "She" or "He", based on the person in the first frame.
+- "dialog": the spoken line. If the user wrote the dialogue, copy it word for word (only remove quote marks inside it). If the dialogue is ${AI_FILL}, write one short line in ${lang} that fits the persona. Maximum about ${maxW} words so it fits ${d} seconds with a natural tail. Write numbers, prices and symbols as spoken words. Empty string "" if the dialogue is ${NONE}.
+- "nota": one short sentence in Bahasa Indonesia summarising what happens in this shot.
+Rules for every English field: describe only what continues logically from the first frame; one continuous shot, no cuts, no change of angle or location. Never use the word "phone" in actions; call it "the camera" or "the lens". Never write an action that moves, tilts, zooms or repositions the camera; if something must look closer, the person leans toward the lens. ${hands} Never describe the background as soft, blurred or out of focus.`;
+
+  return `
+
+---
+OUTPUT FORMAT (for the app): The app places your answer into a FIXED Google Flow [VIDEO PROMPT] template (camera mode "${L.camMode}", lock sentences and negative prompt are already fixed). Return ONLY valid JSON with these slots:
+{"pronoun": "", "action": "", "lighting": "", "product_desc": "", "environment": "", "voice": "", "dialog": "", "nota": ""}
+- "action": 1 or 2 short English sentences of natural physical action, gestures and expression, in the order of the dialogue and following SUSUNAN ADEGAN. You may anchor a gesture with at most 3 words of the dialogue in double quotes, e.g. on "enak banget".
+- "lighting": one short phrase naming the light visible in the first frame, e.g. "Soft window daylight indoors" or "Warm indoor lamp light at night".
+- "product_desc": a short description of the product in Bahasa Indonesia, e.g. "botol serum kaca oranye dengan pipet hitam". Empty string "" if there is no physical product.
+- "environment": a short location label in Bahasa Indonesia, e.g. "Kamar Tidur Minimalis".
+- "voice": a short English phrase (no pronouns) for the speaking tone, based on "Gaya bicara" in the brief${voicePreset() ? ` (${voicePreset()})` : ""}, e.g. "a calm, sincere voice with steady pacing". Empty string "" if there is no dialogue.${common}`;
+}
+
+// Gabung slot dari AI ke dalam template tetap
+function clean(s) { return String(s == null ? "" : s).trim(); }
+function dialogOf(d) { const t = clean(d.dialog).replace(/^["“\[]+|["”\]]+$/g, "").replace(/"/g, ""); return /^(tiada|\(tiada\)|tidak ada|\(tidak ada\)|nggak ada|gak ada|none|-)$/i.test(t) ? "" : t; }
+
+function assembleOmni(d, toneOverride) {
+  const L = lockedVals(), m = CAM_MODES[L.camMode] || CAM_MODES["Handheld selfie"];
+  const male = /^he$/i.test(clean(d.pronoun));
+  const dialog = dialogOf(d);
+  const en = S.brief.bahasa === "EN";
+  const light = clean(d.lighting).replace(/\.$/, "") || "Natural daylight matching the first frame";
+  const hasProduct = !!(S.product.name.trim() || S.product.photos.some(Boolean));
+  const prodName = S.product.name.trim() || "the product";
+  const prodLine = hasProduct
+    ? `Model casually interacting with ${prodName}${clean(d.product_desc) ? ` (${clean(d.product_desc)})` : ""} in an everyday setting.`
+    : "Model casually talking to the camera in an everyday setting.";
+  const action = clean(d.action) || "She looks into the lens and starts talking naturally.";
+  const arm = m.selfie ? " Her right arm stays extended toward the camera from out of frame until the last frame; she gestures only with her left hand." : "";
+  const speak = dialog
+    ? ` She speaks in ${((toneOverride && clean(d.voice)) ? clean(d.voice) : (voicePreset() || clean(d.voice) || VOICE_STYLES["Santai"].en)).replace(/\.$/, "")}. After the last word she holds a natural expression for a moment before the clip ends.`
+    : " She does not speak. She holds a natural expression until the clip ends.";
+  const lip = dialog
+    ? `LIP-SYNC AUDIO: Model is actively speaking in ${en ? "English" : "Bahasa Indonesia with a natural Indonesian accent"}. Mouth must move precisely to match this dialogue (spoken audio only, never displayed as on-screen text): "__DIALOG__".`
+    : "LIP-SYNC AUDIO: Model is not speaking. No dialogue, natural ambient sound only.";
+  const ci = refIndex("char");
+  const refBlock = omniRef() ? `REFERENCES (uploaded in this order):\n${refLines().join("\n")}\n\n` : "";
+  const faceLock = omniRef() && ci > 0
+    ? `CRITICAL FACE & IDENTITY LOCK: You MUST use ${refTag(ci)} (character sheet) to lock the character's face. The character in the video MUST be an EXACT CLONE of the face in ${refTag(ci)}, including gender, skin tone, hair, and facial structure. DO NOT invent a new face. DO NOT change the clothing from ${refTag(0)}.`
+    : OMNI_FACE_LOCK;
+  const fixed = `[VIDEO PROMPT]
+${refBlock}SCENE ACTION: ${m.first} __ACTION__${arm}${speak}
+CAMERA: ${m.camera} LIGHTING: ${light}
+VISUAL CONTEXT: RAW AUTHENTIC UGC PHOTO (${m.vc}). Model facing camera naturally. Candid mid-sentence expression. ${prodLine} CRITICAL: Extremely realistic human skin texture, clear natural skin, unedited natural look. ABSOLUTELY NO acne or excessive blemishes. LIGHTING: ${light} Real-world lived-in background, no studio setup.
+
+${faceLock}
+${OMNI_REALISM_LOCK}
+CRITICAL CAMERA LOCK: ${m.lock}
+${OMNI_TEXT_LOCK}
+
+${lip}
+ENVIRONMENT: ${clean(d.environment) || "Lokasi dalam first frame"}
+
+NEGATIVE PROMPT: ${OMNI_NEG_BASE}, ${m.neg}.`;
+  return genderize(fixed, male).replace("__ACTION__", action).replace("__DIALOG__", dialog);
+}
+
+// Referensi untuk Google Flow, sesuai urutan unggah
+const locUsed = () => S.ff.mode === "ai" && !!S.loc.img;
+const omniRef = () => S.brief.refMode !== "start";
+const omniV12 = () => S.brief.omniVer === "1.2";
+function refList() {
+  const r = [{ key: "ff", label: "First Frame" }];
+  if (S.card.main) r.push({ key: "char", label: "Character Sheet" });
+  if (S.product.photos.some(Boolean)) r.push({ key: "prod", label: "Foto produk" });
+  if (locUsed() && !omniV12()) r.push({ key: "loc", label: "Foto lokasi" });
+  return r;
+}
+const ORD = ["first", "second", "third", "fourth", "fifth", "sixth"];
+const refTag = (i) => omniV12() ? `the ${ORD[i] || "next"} image` : `@${i + 1}`;
+// Omni 1.2: peran tiap gambar ditulis dengan kalimat biasa (tag @ tidak dipakai)
+const REF_NL = {
+  ff: (o) => `Use the ${o} image as the exact first frame of the video. The video starts exactly from it as one continuous shot; keep the framing, pose, light, outfit, product and location unchanged.`,
+  char: (o) => `Use the ${o} image as the character reference (character sheet): same face, facial structure, skin tone and hair.`,
+  prod: (o) => `Use the ${o} image as the product reference: keep the exact shape, colours, label and markings; the label stays unchanged.`,
+  loc: (o) => `Use the ${o} image as the location reference: keep the same place, layout, colours and light.`
+};
+const REF_EN = {
+  ff: (t) => `${t} = EXACT FIRST FRAME. The video starts exactly from ${t} as one continuous shot; keep the framing, pose, light, outfit, product and location exactly as in ${t}.`,
+  char: (t) => `${t} = CHARACTER REFERENCE (character sheet). Lock the face and identity to ${t}: same face, facial structure, skin tone and hair.`,
+  prod: (t) => `${t} = PRODUCT REFERENCE. Keep the exact shape, colours, label and markings of the product as in ${t}; the label stays unchanged.`,
+  loc: (t) => `${t} = LOCATION REFERENCE. Keep the same place, layout, furniture, colours and light as in ${t}.`
+};
+const refLines = () => refList().map((r, i) => omniV12() ? REF_NL[r.key](ORD[i] || "next") : REF_EN[r.key](refTag(i)));
+const refIndex = (key) => refList().findIndex(r => r.key === key);
+
+function uploadNote() {
+  const prod = S.product.photos.some(Boolean);
+  if (omniRef() && omniV12()) return `Unggah ke Google Flow (Omni 1.2) berurutan tanpa tag @: ${refList().map((r, i) => `${i + 1}. ${r.label}`).join(" · ")}. Peran tiap gambar sudah dijelaskan di dalam prompt.`;
+  if (omniRef()) return `Unggah ke Google Flow sebagai referensi sesuai urutan ini: ${refList().map((r, i) => `${refTag(i)} = ${r.label}`).join(" · ")}.`;
+  return `Unggah ke Google Flow: start frame = First Frame · reference image = Character Sheet${prod ? " + foto produk" : ""}.`;
+}
+
+// ───────────────────────── STATE ─────────────────────────
+const BP_SLOTS = [
+  { name: "Outfit", sub: "2×2 · 4 outfit" },
+  { name: "Expression", sub: "3×3 · 9 ekspresi" }
+];
+const padBP = (a) => BP_SLOTS.map((_, i) => (a || [])[i] || null);
+const blankCard = () => ({ id: null, name: "", main: null, blueprints: padBP(), persona: "", lock: "", lockAuto: true });
+const blankBrief = () => ({ tujuan: "", model: "Google Flow", durasi: 10, susunan: "", aksi: "", interaksi: "", dialog: "", gayaCakap: "Santai", bahasa: "ID", refMode: "omni", omniVer: "1.1", autofill: true });
+const STYLE_KEYS = ["model", "durasi", "gayaCakap", "bahasa", "refMode", "omniVer", "autofill"];
+
+function freshState() {
+  return {
+    step: 1,
+    card: blankCard(),
+    product: { name: "", notes: "", photos: [null, null] },
+    loc: { img: null, lock: "" },
+    ff: { mode: "upload", scene: "", framing: "Medium close-up", camMode: "Handheld selfie", ratio: "9:16", versions: [], active: 0, uploaded: null, prompt: null, used: null },
+    brief: blankBrief(),
+    out: { versions: [], active: 0 },
+    shotId: Date.now(),
+    shots: []
+  };
+}
+let S = freshState();
+let cards = [];
+let busy = { ff: false, prompt: false, lock: false };
+let uploadTarget = null;
+let workingImageModel = null, workingTextModel = null, imageConfigSupported = true;
+const exhausted = new Set();
+const $ = (id) => document.getElementById(id);
+
+const getPath = (o, p) => p.split(".").reduce((a, k) => (a == null ? a : a[k]), o);
+const setPath = (o, p, v) => { const ks = p.split("."); const last = ks.pop(); ks.reduce((a, k) => a[k], o)[last] = v; };
+
+// Nilai yang dikunci dari Langkah 2 (mengikuti first frame yang sedang dipakai)
+function lockedVals() {
+  const f = S.ff;
+  if (f.mode === "ai" && f.used && f.versions.length) return f.used;
+  return { scene: "", framing: "", camMode: f.camMode, ratio: f.ratio };
+}
+
+function firstFrame() {
+  if (S.ff.mode === "upload") return S.ff.uploaded;
+  const v = S.ff.versions[S.ff.active];
+  return v ? v.src : null;
+}
+
+// ───────────────────────── PENYIMPANAN (IndexedDB → localStorage → memori) ─────────────────────────
+const store = (() => {
+  const mem = {};
+  let dbp = null;
+  function db() {
+    if (!dbp) dbp = new Promise((res, rej) => {
+      const timer = setTimeout(() => rej(new Error("idb timeout")), 1500);
+      try {
+        const r = indexedDB.open("smart-ai-studio-ai-influencer", 1);
+        r.onupgradeneeded = () => r.result.createObjectStore("kv");
+        r.onsuccess = () => { clearTimeout(timer); res(r.result); };
+        r.onerror = () => { clearTimeout(timer); rej(r.error); };
+      } catch (e) { clearTimeout(timer); rej(e); }
+    });
+    return dbp;
+  }
+  async function get(k) {
+    try {
+      const d = await db();
+      return await new Promise((res, rej) => { const q = d.transaction("kv").objectStore("kv").get(k); q.onsuccess = () => res(q.result); q.onerror = () => rej(q.error); });
+    } catch (e) {
+      try { const v = localStorage.getItem("sas-aii-" + k); return v ? JSON.parse(v) : mem[k]; } catch (_) { return mem[k]; }
+    }
+  }
+  async function set(k, v) {
+    mem[k] = v;
+    try {
+      const d = await db();
+      await new Promise((res, rej) => { const tx = d.transaction("kv", "readwrite"); tx.objectStore("kv").put(v, k); tx.oncomplete = res; tx.onerror = () => rej(tx.error); tx.onabort = () => rej(tx.error); });
+      return true;
+    } catch (e) {
+      try { localStorage.setItem("sas-aii-" + k, JSON.stringify(v)); return true; } catch (_) { return false; }
+    }
+  }
+  return { get, set };
+})();
+
+let saveTimer = null;
+function scheduleSave() {
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => { store.set("draft", S); }, 600);
+}
+
+// ───────────────────────── UTILITAS ─────────────────────────
+function loadImageFile(file, max = 1536, q = 0.9) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = reject;
+    reader.onload = () => {
+      const img = new Image();
+      img.onerror = reject;
+      img.onload = () => {
+        const s = Math.min(1, max / Math.max(img.width, img.height));
+        const c = document.createElement("canvas");
+        c.width = Math.round(img.width * s); c.height = Math.round(img.height * s);
+        const ctx = c.getContext("2d");
+        ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, c.width, c.height);
+        ctx.drawImage(img, 0, 0, c.width, c.height);
+        resolve(c.toDataURL("image/jpeg", q));
+      };
+      img.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+function thumbOf(src, max = 240) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      const s = Math.min(1, max / Math.max(img.width, img.height));
+      const c = document.createElement("canvas"); c.width = Math.round(img.width * s); c.height = Math.round(img.height * s);
+      c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+      resolve(c.toDataURL("image/jpeg", 0.8));
+    };
+    img.onerror = () => resolve(null);
+    img.src = src;
+  });
+}
+const splitDataUrl = (u) => { const [h, d] = u.split(","); return { mime: (h.match(/data:(.*?);/) || [])[1] || "image/png", data: d }; };
+const inlinePart = (u) => { const { mime, data } = splitDataUrl(u); return { inlineData: { mimeType: mime, data } }; };
+const extOf = (u) => { const m = splitDataUrl(u).mime; return m.includes("jp") ? "jpg" : m.includes("webp") ? "webp" : "png"; };
+const safeName = (s) => (s || "Influencer").trim().replace(/[^\w\- ]+/g, "").replace(/\s+/g, "_") || "Influencer";
+
+function saveBlob(blob, name) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a"); a.href = url; a.download = name;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1500);
+}
+
+function copyText(text) {
+  const t = document.createElement("textarea"); t.value = text; t.style.position = "fixed"; t.style.left = "-9999px";
+  document.body.appendChild(t); t.select();
+  let ok = false;
+  try { ok = document.execCommand("copy"); } catch (e) {}
+  t.remove();
+  if (!ok && navigator.clipboard) navigator.clipboard.writeText(text).catch(() => {});
+}
+function flashBtn(btn, text) { const old = btn.dataset.label || btn.textContent; btn.dataset.label = old; btn.textContent = text; setTimeout(() => { btn.textContent = old; }, 1800); }
+
+let audioCtx = null;
+function playClick() {
+  try {
+    const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return;
+    if (!audioCtx) audioCtx = new AC(); if (audioCtx.state === "suspended") audioCtx.resume();
+    const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+    o.type = "sine"; o.frequency.setValueAtTime(800, audioCtx.currentTime); o.frequency.exponentialRampToValueAtTime(300, audioCtx.currentTime + 0.05);
+    g.gain.setValueAtTime(0.12, audioCtx.currentTime); g.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
+    o.connect(g); g.connect(audioCtx.destination); o.start(); o.stop(audioCtx.currentTime + 0.05);
+  } catch (e) {}
+}
+
+// ───────────────────────── GEMINI API ─────────────────────────
+class GenError extends Error { constructor(kind, msg) { super(msg); this.kind = kind; } }
+const isModelMissing = (s, t) => s === 404 || (s === 400 && /not found|not supported|unsupported model|is not available/i.test(t));
+const isQuota = (s, t) => s === 429 || /RESOURCE_EXHAUSTED|quota|rate limit/i.test(t);
+
+async function fetchWithRetry(url, options) {
+  const delays = [1000, 2000, 4000, 8000, 16000];
+  for (let i = 0; i <= delays.length; i++) {
+    try {
+      const res = await fetch(url, options);
+      if (res.ok || i === delays.length || res.status === 404) return res;
+      if (res.status === 400) {
+        const t = await res.clone().text();
+        if (isModelMissing(400, t) || /imageConfig|image_config|aspect/i.test(t)) return res;
+      }
+    } catch (e) { if (i === delays.length) throw e; }
+    await new Promise(r => setTimeout(r, delays[i]));
+  }
+}
+async function post(model, body) {
+  if (!IN_CANVAS) throw new GenError("canvas", FRIENDLY_ERRORS.canvas);
+  try {
+    return await fetchWithRetry(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
+      { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+  } catch (e) { throw new GenError("failed", FRIENDLY_ERRORS.failed); }
+}
+
+async function generateImage(parts, aspectRatio) {
+  throw new GenError("noimage", "Pembuatan gambar first frame tidak tersedia di versi ini. Pilih mode Upload dan unggah first frame buatan Anda (misalnya dari Gemini atau Flow).");
+}
+
+async function generateJSON(parts) {
+  let sample = null;
+  try { sample = window.claude && window.claude.use ? await window.claude.use("sample") : null; } catch (e) {}
+  if (!sample) throw new GenError("failed", "Fitur AI tidak tersedia di tampilan ini. Buka lewat tautan artifact di Claude lalu izinkan akses saat diminta.");
+  const lim = await sample.limits().catch(() => null);
+  const text = parts.filter(p => p.text).map(p => p.text).join("\n\n");
+  const inl = parts.filter(p => p.inlineData);
+  const opts = { modelTier: "default", cache: false };
+  if (inl.length) {
+    if (!(lim && lim.images)) throw new GenError("failed", "Pembacaan foto tidak tersedia di tampilan ini.");
+    opts.images = inl.slice(0, lim.images.maxCount).map(p => {
+      const bin = atob(p.inlineData.data), u = new Uint8Array(bin.length);
+      for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i);
+      return new Blob([u], { type: p.inlineData.mimeType });
+    });
+  }
+  try {
+    const r = await sample(text + "\n\nJawab hanya dengan JSON yang valid, tanpa teks atau penjelasan lain.", opts);
+    const clean = String(r.text || "").trim().replace(/^```(?:json)?/i, "").replace(/```$/, "").trim();
+    try { return JSON.parse(clean); }
+    catch (e) { const m = clean.match(/\{[\s\S]*\}/); if (m) { try { return JSON.parse(m[0]); } catch (_) {} } return { prompt: clean }; }
+  } catch (e) {
+    if (e && e.code === "rate_limited") throw new GenError("quota", FRIENDLY_ERRORS.quota);
+    if (e && e.code === "not_granted") throw new GenError("failed", "Akses ke Claude ditolak. Muat ulang halaman lalu izinkan saat diminta.");
+    throw new GenError("failed", FRIENDLY_ERRORS.failed);
+  }
+}
+
+// ───────────────────────── RENDER: UMUM ─────────────────────────
+const ICON_UP = '<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M17 8l-5-5-5 5"/><path d="M12 3v12"/></svg>';
+
+function slotEl({ src, tag, t1, t2, req, onPick, onRemove, contain }) {
+  if (src) {
+    const d = document.createElement("div"); d.className = "slot filled" + (contain ? " contain" : "");
+    d.innerHTML = `<img alt="${tag}"><span class="tag">${tag}</span><button type="button" class="rm" aria-label="Hapus ${tag}">×</button>`;
+    d.querySelector("img").src = src;
+    d.onclick = () => { playClick(); onPick(); };
+    d.querySelector(".rm").onclick = (e) => { e.stopPropagation(); playClick(); onRemove(); };
+    return d;
+  }
+  const b = document.createElement("button"); b.type = "button"; b.className = "slot" + (req ? " req" : "");
+  b.innerHTML = `<span class="ic">${ICON_UP}</span><span class="t1">${t1}</span><span class="t2">${t2}</span>`;
+  b.onclick = () => { playClick(); onPick(); };
+  return b;
+}
+function pickImage(setter, max, q) { uploadTarget = { setter, max, q }; $("fileInput").click(); }
+
+function syncBinds() {
+  document.querySelectorAll("[data-bind]").forEach(el => {
+    const v = getPath(S, el.dataset.bind);
+    if (el.type === "checkbox") el.checked = !!v;
+    else if (el !== document.activeElement) el.value = v == null ? "" : v;
+  });
+  if (voiceKey() && document.activeElement !== $("bGaya")) $("bGaya").value = "";
+  document.querySelectorAll("[data-chips]").forEach(g => {
+    const v = getPath(S, g.dataset.chips);
+    g.querySelectorAll("[data-val]").forEach(c => c.setAttribute("aria-pressed", c.dataset.val === String(v) ? "true" : "false"));
+  });
+  syncChipsOnly();
+}
+
+function renderAll() {
+  renderSteps(); renderStep1(); renderStep2(); renderStep3(); syncBinds();
+}
+
+function renderSteps() {
+  document.querySelectorAll(".step-tab").forEach(t => {
+    const n = Number(t.dataset.step);
+    if (n === S.step) t.setAttribute("aria-current", "step"); else t.removeAttribute("aria-current");
+  });
+  [1, 2, 3].forEach(n => { $("step" + n).hidden = n !== S.step; });
+  const done1 = !!S.card.main, done2 = !!firstFrame(), done3 = S.out.versions.length > 0;
+  [[1, done1, "1"], [2, done2, "2"], [3, done3, "3"]].forEach(([n, d, label]) => {
+    const el = $("stepNum" + n); el.classList.toggle("done", d && n !== S.step); el.textContent = d && n !== S.step ? "✓" : label;
+  });
+}
+
+// ───────────────────────── RENDER: LANGKAH 1 ─────────────────────────
+function renderStep1() {
+  const row = $("cardsRow"); row.innerHTML = "";
+  cards.forEach(c => {
+    const b = document.createElement("button"); b.type = "button"; b.className = "icard";
+    b.setAttribute("aria-pressed", c.id === S.card.id ? "true" : "false");
+    b.innerHTML = `<img alt=""><span></span>`; b.querySelector("img").src = c.thumb || c.main; b.querySelector("span").textContent = c.name;
+    b.onclick = () => { playClick(); loadCard(c.id); };
+    row.appendChild(b);
+  });
+  const nb = document.createElement("button"); nb.type = "button"; nb.className = "icard new";
+  nb.setAttribute("aria-pressed", S.card.id ? "false" : "true");
+  nb.innerHTML = `<span class="plus">+</span><span>${cards.length ? "Influencer baru" : "Kartu pertama kamu"}</span>`;
+  nb.onclick = () => { playClick(); newCard(); };
+  row.appendChild(nb);
+  $("deleteCardBtn").hidden = !S.card.id;
+
+  // Foto karakter
+  const cs = $("charSlots"); cs.innerHTML = "";
+  cs.appendChild(slotEl({ src: S.card.main, tag: "Character Sheet", t1: "Character Sheet · Wajib", t2: "Wajah jelas, terlihat realistis", req: true,
+    onPick: () => pickImage(v => { S.card.main = v; queueLock(); }, 2048, 0.9), onRemove: () => { S.card.main = null; queueLock(); afterChange(); } }));
+  S.card.blueprints.forEach((src, i) => cs.appendChild(slotEl({ src, tag: BP_SLOTS[i].name, t1: BP_SLOTS[i].name, t2: `Opsional · ${BP_SLOTS[i].sub}`, contain: true,
+    onPick: () => pickImage(v => { S.card.blueprints[i] = v; queueLock(); }, 2048, 0.9), onRemove: () => { S.card.blueprints[i] = null; queueLock(); afterChange(); } })));
+  $("charBadge").textContent = `${[S.card.main, ...S.card.blueprints].filter(Boolean).length} / 3`;
+  $("lockBtn").disabled = busy.lock || !S.card.main;
+  $("lockLoading").hidden = !busy.lock;
+
+  // Produk
+  const ps = $("prodSlots"); ps.innerHTML = "";
+  S.product.photos.slice(0, 2).forEach((src, i) => ps.appendChild(slotEl({ src, tag: `Produk ${i + 1}`, t1: `Foto ${i + 1}`, t2: i === 0 ? "Depan / label" : "Sudut lain", contain: true,
+    onPick: () => pickImage(v => { S.product.photos[i] = v; }), onRemove: () => { S.product.photos[i] = null; afterChange(); } })));
+
+  // Lokasi
+  const ls = $("locSlots"); ls.innerHTML = "";
+  ls.appendChild(slotEl({ src: S.loc.img, tag: "Lokasi", t1: "Grid / foto lokasi", t2: "Dari Background & Scene", contain: true,
+    onPick: () => pickImage(v => { S.loc.img = v; }, 2048, 0.9), onRemove: () => { S.loc.img = null; afterChange(); } }));
+}
+
+// ───────────────────────── RENDER: LANGKAH 2 ─────────────────────────
+function refCounts() {
+  return {
+    char: [S.card.main, ...S.card.blueprints].filter(Boolean).length,
+    prod: S.product.photos.filter(Boolean).length,
+    loc: S.loc.img ? 1 : 0
+  };
+}
+function renderStep2() {
+  const f = S.ff;
+  document.querySelectorAll("#ffModeChips .chip").forEach(c => c.setAttribute("aria-pressed", c.dataset.mode === f.mode ? "true" : "false"));
+  $("ffAiBox").hidden = f.mode !== "ai";
+  $("ffUpBox").hidden = f.mode !== "upload";
+
+  const n = refCounts();
+  $("ffRefs").innerHTML = "";
+  [[n.char, `Karakter${n.char ? " ×" + n.char : ""}`], [n.prod, `Produk${n.prod ? " ×" + n.prod : ""}`], [n.loc, "Lokasi"],
+   [S.card.lock.trim() ? 1 : 0, "Kunci Karakter"]].forEach(([on, label]) => {
+    const s = document.createElement("span"); s.className = on ? "on" : ""; s.textContent = (on ? "✓ " : "– ") + label; $("ffRefs").appendChild(s);
+  });
+  const cc = $("camChips");
+  if (!cc.children.length) Object.keys(CAM_MODES).forEach(k => { const b = document.createElement("button"); b.type = "button"; b.className = "chip s"; b.dataset.val = k; b.textContent = k; cc.appendChild(b); });
+  $("camHint").textContent = camMode().hint;
+  $("ffGenWrap").hidden = f.mode !== "ai";
+  $("ffGenBtn").disabled = busy.ff || !S.card.main;
+  const u = f.used, changed = f.mode === "ai" && u && f.versions.length && (u.camMode !== f.camMode || u.framing !== f.framing || u.ratio !== f.ratio || u.scene !== f.scene.trim());
+  $("ffHint").textContent = !S.card.main ? "Unggah Character Sheet di Langkah 1 dulu."
+    : changed ? "Pilihan berubah. Tekan Generate First Frame untuk memakai pilihan baru (Langkah 3 masih mengikuti first frame saat ini)."
+    : "1× generate gambar · biasanya 20–60 detik";
+  $("ffHint").classList.toggle("warn", !!changed);
+
+  const us = $("ffUpSlot"); us.innerHTML = "";
+  us.appendChild(slotEl({ src: f.uploaded, tag: "First frame", t1: "Unggah first frame", t2: "JPG / PNG", req: true, contain: true,
+    onPick: () => pickImage(v => { S.ff.uploaded = v; }, 2048, 0.92), onRemove: () => { S.ff.uploaded = null; afterChange(); } }));
+
+  const src = firstFrame();
+  const v = f.mode === "ai" ? f.versions[f.active] : null;
+  $("ffEmpty").hidden = !!src;
+  $("ffImg").hidden = !src;
+  if (src) $("ffImg").src = src;
+  $("ffLoading").hidden = !busy.ff;
+  $("ffAfter").hidden = !src;
+  $("ffReviseBox").hidden = f.mode !== "ai" || !v;
+  $("ffRegenBtn").hidden = f.mode !== "ai";
+  $("ffOk").textContent = f.mode === "ai" && v ? `Selesai. V${f.active + 1} · ${v.note}` : "First frame kamu siap.";
+  const vs = $("ffVersions"); vs.innerHTML = "";
+  vs.hidden = f.mode !== "ai" || f.versions.length < 2;
+  f.versions.forEach((x, i) => {
+    const b = document.createElement("button"); b.type = "button"; b.setAttribute("aria-current", i === f.active ? "true" : "false");
+    b.innerHTML = `<img alt="Versi ${i + 1}"><span>V${i + 1}</span>`; b.querySelector("img").src = x.src;
+    b.onclick = () => { playClick(); S.ff.active = i; afterChange(); };
+    vs.appendChild(b);
+  });
+  $("ffReviseBtn").disabled = busy.ff || !$("ffRevision").value.trim();
+  $("ffRegenBtn").disabled = busy.ff || !f.prompt;
+  $("ffDlBtn").disabled = busy.ff || !src;
+}
+
+// ───────────────────────── RENDER: LANGKAH 3 ─────────────────────────
+function renderStep3() {
+  const src = firstFrame();
+  const hasProduct = !!(S.product.name.trim() || S.product.photos.some(Boolean));
+  $("p3NoFF").hidden = !!src; $("p3FF").hidden = !src;
+  if (src) $("p3FFImg").src = src;
+  const cardTitle = S.card.name.trim();
+  $("p3Name").textContent = cardTitle || "Influencer";
+  $("saveStyleBtn").textContent = cardTitle ? `Simpan Pengaturan Brief ke Kartu "${cardTitle}"` : "Simpan Pengaturan Brief ke Kartu";
+  const L = lockedVals();
+  $("p3Meta").textContent = `Google Flow · ${Number(S.brief.durasi) || 10} detik · ${L.ratio}`;
+  const rows = [
+    ["Produk", S.product.name.trim() || (S.product.photos.some(Boolean) ? "Produk dalam foto" : "Tidak ada")],
+    ["Lokasi", S.ff.mode === "upload" ? "Sesuai first frame" : (S.loc.img ? "Foto lokasi" : "Dipilih AI")],
+    ["Mode kamera", L.camMode],
+    ["Framing", L.framing || "Sesuai first frame"],
+    ["Rasio", L.ratio]
+  ];
+  if (L.scene) rows.push(["Adegan pembuka", L.scene]);
+  const ll = $("lockedList"); ll.innerHTML = "";
+  rows.forEach(([k, v]) => { const d = document.createElement("div"); d.innerHTML = "<span></span><b></b>"; d.querySelector("span").textContent = k; d.querySelector("b").textContent = v; ll.appendChild(d); });
+
+  const gc = $("gayaChips");
+  if (!gc.children.length) Object.keys(VOICE_STYLES).forEach(k => { const b = document.createElement("button"); b.type = "button"; b.className = "chip s"; b.dataset.val = k; b.textContent = k; gc.appendChild(b); });
+  $("refModeHint").textContent = omniRef()
+    ? `Semua aset diunggah sebagai referensi: ${refList().map((r, i) => `${refTag(i)} = ${r.label}`).join(" · ")}. Prompt menyebut dengan jelas gambar mana first frame, model, produk, dan lokasi.`
+    : "First Frame menjadi start frame, dan Character Sheet sebagai referensi wajah.";
+  const vk = voiceKey();
+  $("gayaHint").textContent = vk ? VOICE_STYLES[vk].hint : (S.brief.gayaCakap.trim() ? "Gaya sendiri: AI menerjemahkannya ke nada suara pada prompt." : "Pilih satu, atau tulis gaya bicara sendiri.");
+  if (omniRef() && omniV12()) $("refModeHint").textContent = `Omni 1.2: gambar diunggah berurutan (${refList().map((r, i) => `${i + 1}. ${r.label}`).join(" · ")}). Peran tiap gambar ditulis dengan kalimat biasa tanpa tag @, dan foto lokasi tidak ikut diunggah karena sudah terlihat di first frame.`;
+  $("durHint").textContent = omniV12() ? "Omni 1.2: 1 klip tersedia dalam durasi 4, 6, 8, 10, 12, atau 15 detik." : "Omni 1.1: 1 klip tersedia dalam durasi 4, 6, 8, atau 10 detik.";
+  document.querySelectorAll("#durChips [data-only]").forEach(c => { c.style.display = omniV12() ? "" : "none"; });
+  $("omniVerHint").textContent = omniV12()
+    ? "Omni 1.2: klip hingga 15 detik, referensi ditulis dengan kalimat biasa. Dialog bahasa Indonesia kadang gagal diproses audio; kalau gagal, coba dialog lebih pendek atau bahasa Inggris."
+    : "Omni 1.1: pengaturan awal. Google akan mengalihkan 1.1 ke 1.2 mulai 3 Desember 2026.";
+  $("interaksiWrap").hidden = !hasProduct;
+
+  const words = S.brief.dialog.trim() && !/^(tiada|tak ada|tidak ada|nggak ada|gak ada|none|-)$/i.test(S.brief.dialog.trim()) ? S.brief.dialog.trim().split(/\s+/).length : 0;
+  const maxW = Math.max(4, Math.floor(((Number(S.brief.durasi) || 10) - 0.8) * WORDS_PER_SEC));
+  const dh = $("dialogHint");
+  dh.textContent = words ? `${words} kata · saran maksimal ~${maxW} kata untuk ${Number(S.brief.durasi) || 10} detik` : "Dialog pendek lebih natural. Perkiraan: 2–3 kata per detik.";
+  dh.classList.toggle("warn", words > maxW);
+
+  $("promptBtn").disabled = busy.prompt || !src;
+  $("promptHint").textContent = !src ? "Butuh first frame dulu." : S.out.versions.length ? "Tekan lagi untuk versi baru dengan brief saat ini." : "AI membaca first frame + brief kamu.";
+  $("pLoading").hidden = !busy.prompt;
+  const o = S.out.versions[S.out.active];
+  $("pEmpty").hidden = !!o || busy.prompt;
+  $("pOut").hidden = !o;
+  $("pAfter").hidden = !o;
+  if (o) {
+    $("pText").textContent = o.prompt;
+    $("pNota").textContent = o.nota || "Prompt siap.";
+    $("pLabel").textContent = `Prompt V${S.out.active + 1} · Google Flow${o.label ? " · " + o.label : ""}`;
+    $("pUpload").textContent = o.upload || uploadNote(); $("pUpload").hidden = !o.upload;
+  }
+  const pv = $("pVersions"); pv.innerHTML = ""; pv.hidden = S.out.versions.length < 2;
+  S.out.versions.forEach((x, i) => {
+    const b = document.createElement("button"); b.type = "button"; b.className = "link-btn"; b.style.width = "auto"; b.style.opacity = i === S.out.active ? "1" : ".7";
+    b.style.border = i === S.out.active ? "2px solid var(--teal)" : "2px solid transparent"; b.textContent = `V${i + 1}`;
+    b.onclick = () => { playClick(); S.out.active = i; afterChange(); };
+    pv.appendChild(b);
+  });
+  $("pReviseBtn").disabled = busy.prompt || !$("pRevision").value.trim();
+
+  const sw = $("shotsWrap"), sh = $("shots"); sw.hidden = !S.shots.length; sh.innerHTML = "";
+  S.shots.forEach((s, i) => {
+    const d = document.createElement("div"); d.className = "shot";
+    d.innerHTML = `<img alt=""><div class="t"><b></b><span></span></div><button type="button" class="link-btn">Salin</button>`;
+    if (s.thumb) d.querySelector("img").src = s.thumb; else d.querySelector("img").remove();
+    d.querySelector("b").textContent = `Shot ${i + 1}${s.id === S.shotId ? " (saat ini)" : ""} · Google Flow ${s.durasi} detik`;
+    d.querySelector(".t span").textContent = s.nota || "";
+    d.querySelector("button").onclick = (e) => { playClick(); copyText(s.prompt); flashBtn(e.currentTarget, "Tersalin!"); };
+    sh.appendChild(d);
+  });
+  $("nextShotBtn").disabled = busy.prompt || busy.ff;
+}
+
+function afterChange() { renderAll(); scheduleSave(); }
+function showErr(id, msg) { const e = $(id); e.textContent = msg || ""; e.hidden = !msg; }
+
+// ───────────────────────── KARTU INFLUENCER ─────────────────────────
+function newCard() {
+  S.card = blankCard(); S.loc = { img: null, lock: "" };
+  $("cardMsg").hidden = true; afterChange();
+}
+function loadCard(id) {
+  const c = cards.find(x => x.id === id); if (!c) return;
+  const oldBp = c.blueprints || [];
+  const mappedBp = oldBp.length === 5 ? [oldBp[0] || null, oldBp[3] || null] : padBP(oldBp);
+  S.card = { id: c.id, name: c.name || "", main: c.main || null, blueprints: mappedBp, persona: c.persona || "", lock: c.lock || "", lockAuto: c.lockAuto !== false };
+  S.loc = { img: (c.loc && c.loc.img) || null, lock: (c.loc && c.loc.lock) || "" };
+  if (c.style) { STYLE_KEYS.forEach(k => { if (c.style[k] !== undefined) S.brief[k] = c.style[k]; }); if (CAM_MODES[c.style.camMode]) S.ff.camMode = c.style.camMode; }
+  S.brief.model = "Google Flow";
+  if (S.brief.bahasa !== "EN") S.brief.bahasa = "ID";
+  fixDuration();
+  $("cardMsg").hidden = true; afterChange();
+}
+async function saveCard() {
+  const msg = $("cardMsg");
+  if (!S.card.main) { showErr("globalErr", "Unggah Character Sheet dulu sebelum menyimpan Kartu."); S.step = 1; renderAll(); return false; }
+  showErr("globalErr", "");
+  if (!S.card.name.trim()) S.card.name = `Influencer ${cards.length + 1}`;
+  if (!S.card.id) S.card.id = "c" + Date.now();
+  const style = { camMode: S.ff.camMode }; STYLE_KEYS.forEach(k => style[k] = S.brief[k]);
+  const card = { ...JSON.parse(JSON.stringify(S.card)), loc: { ...S.loc }, style, thumb: await thumbOf(S.card.main, 96), updated: Date.now() };
+  const i = cards.findIndex(c => c.id === card.id);
+  if (i >= 0) cards[i] = card; else cards.push(card);
+  const ok = await store.set("cards", cards);
+  msg.hidden = false; msg.className = ok ? "ok" : "err";
+  msg.textContent = ok ? `Kartu "${card.name}" tersimpan. Pilih kartu ini saat membuat video berikutnya.` : "Peramban ini tidak mengizinkan penyimpanan. Tekan Ekspor kartu untuk menyimpan sebagai file.";
+  afterChange();
+  return ok;
+}
+let deleteArmed = false;
+async function deleteCard() {
+  if (!S.card.id) return;
+  if (!deleteArmed) { deleteArmed = true; $("deleteCardBtn").textContent = "Tekan lagi untuk hapus"; setTimeout(() => { deleteArmed = false; $("deleteCardBtn").textContent = "Hapus kartu"; }, 3000); return; }
+  deleteArmed = false; $("deleteCardBtn").textContent = "Hapus kartu";
+  cards = cards.filter(c => c.id !== S.card.id);
+  await store.set("cards", cards);
+  newCard();
+}
+function exportCard() {
+  const current = S.card.id ? cards.find(c => c.id === S.card.id) : null;
+  const style = {}; STYLE_KEYS.forEach(k => style[k] = S.brief[k]);
+  const card = current || { ...JSON.parse(JSON.stringify(S.card)), loc: { ...S.loc }, style };
+  if (!card.main) { showErr("globalErr", "Belum ada kartu untuk diekspor. Unggah foto karakter dulu."); return; }
+  const data = { app: "smart-ai-studio-ai-influencer", v: 1, cards: [card] };
+  saveBlob(new Blob([JSON.stringify(data)], { type: "application/json" }), `Kartu_${safeName(card.name)}.json`);
+}
+async function importCards(file) {
+  try {
+    const data = JSON.parse(await file.text());
+    const list = Array.isArray(data) ? data : (data.cards || (data.main ? [data] : []));
+    const isImg = v => typeof v === "string" && /^data:image\/(png|jpe?g|webp|gif);base64,/i.test(v);
+    const cleanCard = c => {
+      if (!c || typeof c !== "object" || !isImg(c.main)) return null;
+      const out = { ...c };
+      out.id = (typeof c.id === "string" && /^[\w-]{1,40}$/.test(c.id)) ? c.id : "c" + Date.now() + Math.random().toString(36).slice(2, 6);
+      out.name = String(c.name || "").slice(0, 80);
+      out.persona = String(c.persona || "").slice(0, 2000);
+      out.lock = String(c.lock || "").slice(0, 4000);
+      out.lockAuto = c.lockAuto !== false;
+      out.blueprints = Array.isArray(c.blueprints) ? c.blueprints.slice(0, 5).map(x => isImg(x) ? x : null) : [];
+      out.thumb = isImg(c.thumb) ? c.thumb : c.main;
+      out.loc = { img: isImg(c.loc && c.loc.img) ? c.loc.img : null, lock: String((c.loc && c.loc.lock) || "").slice(0, 4000) };
+      return out;
+    };
+    const valid = list.map(cleanCard).filter(Boolean);
+    const skipped = list.length - valid.length;
+    if (!valid.length) throw new Error("empty");
+    valid.forEach(c => { if (!c.id) c.id = "c" + Date.now() + Math.random().toString(36).slice(2, 6); const i = cards.findIndex(x => x.id === c.id); if (i >= 0) cards[i] = c; else cards.push(c); });
+    await store.set("cards", cards);
+    loadCard(valid[0].id);
+    const msg = $("cardMsg"); msg.hidden = false; msg.className = "ok"; msg.textContent = `${valid.length} kartu diimpor.` + (skipped ? ` ${skipped} kartu dilewati karena tidak valid.` : "");
+  } catch (e) { showErr("globalErr", "File kartu tidak valid. Gunakan file .json dari tombol Ekspor kartu."); }
+}
+
+let lockTimer = null;
+function queueLock() { clearTimeout(lockTimer); lockTimer = setTimeout(() => runLock(true), 1200); }
+async function runLock(auto) {
+  if (!S.card.main) { if (S.card.lockAuto) { S.card.lock = ""; afterChange(); } return; }
+  if (auto && S.card.lock.trim() && !S.card.lockAuto) return;
+  if (busy.lock) { if (auto) queueLock(); return; }
+  busy.lock = true; renderStep1(); showErr("globalErr", "");
+  try {
+    const imgs = [S.card.main, ...S.card.blueprints].filter(Boolean);
+    const parts = [{ text: buildLockPrompt(imgs.length) }, ...imgs.map(inlinePart)];
+    const data = await generateJSON(parts);
+    const lock = (data && (data.lock || data.prompt) || "").trim();
+    if (lock) { S.card.lock = lock.startsWith("CHARACTER:") ? lock : "CHARACTER: " + lock; S.card.lockAuto = true; }
+  } catch (e) { showErr("globalErr", "Kunci Karakter tidak bisa dibuat. Tekan Generate ulang untuk mencoba lagi. " + (e.message || FRIENDLY_ERRORS.failed)); }
+  finally { busy.lock = false; afterChange(); }
+}
+
+// ───────────────────────── FIRST FRAME ─────────────────────────
+function ffParts(promptText, previous) {
+  const parts = [];
+  if (S.card.main) parts.push({ text: "Character reference 1 (character sheet):" }, inlinePart(S.card.main));
+  let n = 2;
+  S.card.blueprints.forEach((b, i) => {
+    if (!b) return;
+    const s = BP_SLOTS[i];
+    parts.push({ text: `Character reference ${n++} (${s.name} grid):` }, inlinePart(b));
+  });
+  S.product.photos.filter(Boolean).forEach((b, i) => parts.push({ text: `Product reference ${i + 1}:` }, inlinePart(b)));
+  if (S.loc.img) parts.push({ text: "Location reference:" }, inlinePart(S.loc.img));
+  if (previous) parts.push({ text: "Previous result:" }, inlinePart(previous));
+  parts.push({ text: promptText });
+  return parts;
+}
+
+async function ffGenerate(mode) { // mode: "new" | "regen" | "revise"
+  if (busy.ff || !S.card.main) return;
+  const note = $("ffRevision").value.trim();
+  const prev = S.ff.versions[S.ff.active] && S.ff.versions[S.ff.active].src;
+  if (mode === "revise" && (!note || !prev)) return;
+  if (mode === "new") { S.ff.prompt = buildFirstFramePrompt(refCounts()); S.ff.pending = { scene: S.ff.scene.trim(), framing: S.ff.framing, camMode: S.ff.camMode, ratio: S.ff.ratio }; }
+  if (!S.ff.prompt) return;
+  showErr("ffErr", "");
+  busy.ff = true;
+  $("ffLoadingTitle").textContent = mode === "revise" ? "Merevisi first frame..." : mode === "regen" ? "Membuat ulang first frame..." : "Membuat first frame...";
+  renderAll();
+  if (window.innerWidth < 980) $("ffResultCard").scrollIntoView({ behavior: "smooth", block: "start" });
+  try {
+    const p = mode === "revise" ? buildFFRevisionPrompt(S.ff.prompt, note) : S.ff.prompt;
+    const src = await generateImage(ffParts(p, mode === "revise" ? prev : null), (S.ff.pending || S.ff.used || S.ff).ratio);
+    S.ff.versions.push({ src, note: mode === "revise" ? `Revisi: ${note}` : mode === "regen" ? "Generate ulang" : "Generate awal" });
+    S.ff.active = S.ff.versions.length - 1;
+    if (S.ff.pending) { S.ff.used = S.ff.pending; S.ff.pending = null; }
+    if (mode === "revise") $("ffRevision").value = "";
+  } catch (e) { showErr("ffErr", e.message || FRIENDLY_ERRORS.failed); }
+  finally { busy.ff = false; afterChange(); }
+}
+
+// ───────────────────────── PROMPT VIDEO ─────────────────────────
+async function runPrompt(revise) {
+  const ff = firstFrame();
+  if (busy.prompt || !ff) return;
+  const note = $("pRevision").value.trim();
+  const cur = S.out.versions[S.out.active];
+  if (revise && (!note || !cur)) return;
+  showErr("pErr", "");
+  busy.prompt = true;
+  $("pLoadingTitle").textContent = revise ? "Merevisi prompt..." : "Menulis prompt...";
+  renderAll();
+  try {
+    const brief = buildBrief();
+    const text = revise
+      ? `${brief}\n\nPROMPT SAAT INI:\n${cur.prompt}\n\nPertahankan semua bagian, ubah hanya: ${note}${outputSpec()}`
+      : brief + outputSpec();
+    const data = await generateJSON([{ text: "First frame:" }, inlinePart(ff), ...(locUsed() ? [{ text: "Location reference (the same place as in the first frame):" }, inlinePart(S.loc.img)] : []), { text }]);
+    if (!data || typeof data !== "object") throw new GenError("failed", FRIENDLY_ERRORS.failed);
+    const hasSlots = !!(data.action || data.dialog || data.lighting);
+    const prompt = hasSlots ? assembleOmni(data, revise && /tenaga|santai|nada|suara|cakap|bicara|ngomong|voice|tone/i.test(note)) : String(data.prompt || "").trim();
+    if (!prompt) throw new GenError("failed", FRIENDLY_ERRORS.failed);
+    S.out.versions.push({ prompt, nota: String(data.nota || "").trim(), upload: uploadNote(), model: "Google Flow", label: revise ? `Revisi: ${note}` : "" });
+    S.out.active = S.out.versions.length - 1;
+    if (revise) $("pRevision").value = "";
+    const shot = { id: S.shotId, thumb: await thumbOf(ff, 160), prompt, nota: String(data.nota || "").trim(), model: "Google Flow", durasi: Number(S.brief.durasi) || 10 };
+    const i = S.shots.findIndex(s => s.id === S.shotId);
+    if (i >= 0) S.shots[i] = shot; else S.shots.push(shot);
+  } catch (e) { showErr("pErr", e.message || FRIENDLY_ERRORS.failed); }
+  finally { busy.prompt = false; afterChange(); }
+}
+
+function nextShot() {
+  S.shotId = Date.now();
+  S.ff.versions = []; S.ff.active = 0; S.ff.uploaded = null; S.ff.scene = ""; S.ff.prompt = null; S.ff.used = null;
+  S.out = { versions: [], active: 0 };
+  ["susunan", "aksi", "interaksi", "dialog"].forEach(k => S.brief[k] = "");
+  $("ffRevision").value = ""; $("pRevision").value = "";
+  S.step = 2; afterChange(); window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+let resetArmed = false;
+function resetSession() {
+  if (!resetArmed) { resetArmed = true; $("resetLabel").textContent = "Tekan lagi untuk konfirmasi"; setTimeout(() => { resetArmed = false; $("resetLabel").textContent = "Sesi baru"; }, 3000); return; }
+  resetArmed = false; $("resetLabel").textContent = "Sesi baru";
+  const keep = S.card.id ? cards.find(c => c.id === S.card.id) : null;
+  S = freshState();
+  if (keep) loadCard(keep.id);
+  ["ffRevision", "pRevision"].forEach(id => $(id).value = "");
+  ["globalErr", "ffErr", "pErr"].forEach(id => showErr(id, ""));
+  $("cardMsg").hidden = true;
+  afterChange(); window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function fixDuration() {
+  const d = Number(S.brief.durasi) || 10;
+  const steps = omniV12() ? DURATION_STEPS_12 : DURATION_STEPS;
+  S.brief.durasi = steps.includes(d) ? d : steps.reduce((a, b) => Math.abs(b - d) < Math.abs(a - d) ? b : a);
+}
+
+function goStep(n) { S.step = n; afterChange(); window.scrollTo({ top: 0, behavior: "smooth" }); }
+
+// ───────────────────────── EVENTS ─────────────────────────
+$("fileInput").addEventListener("change", async (e) => {
+  const file = e.target.files && e.target.files[0];
+  e.target.value = "";
+  const t = uploadTarget; uploadTarget = null;
+  if (!file || !t || !file.type.startsWith("image/")) return;
+  try { t.setter(await loadImageFile(file, t.max || 1536, t.q || 0.9)); showErr("globalErr", ""); }
+  catch (err) { showErr("globalErr", "Foto tidak bisa dibaca. Coba foto lain (JPG/PNG)."); }
+  afterChange();
+});
+
+document.querySelectorAll("[data-bind]").forEach(el => {
+  const ev = el.type === "checkbox" ? "change" : "input";
+  el.addEventListener(ev, () => {
+    const v = el.type === "checkbox" ? el.checked : el.value;
+    setPath(S, el.dataset.bind, v);
+    if (el.id === "charLock") S.card.lockAuto = false;
+    renderSteps(); renderStep2(); renderStep3();
+    syncChipsOnly();
+    scheduleSave();
+  });
+});
+function syncChipsOnly() {
+  const hasProduct = !!(S.product.name.trim() || S.product.photos.some(Boolean));
+  document.querySelectorAll(".sugg[data-for]").forEach(g => {
+    const v = String(getPath(S, g.dataset.for) || "");
+    g.querySelectorAll("button").forEach(b => {
+      b.hidden = !hasProduct && PRODUCT_ONLY_SUGG.has(b.textContent);
+      b.setAttribute("aria-pressed", v === b.textContent ? "true" : "false");
+    });
+  });
+}
+
+document.querySelectorAll("[data-chips]").forEach(g => g.addEventListener("click", (e) => {
+  const c = e.target.closest("[data-val]"); if (!c) return;
+  playClick();
+  setPath(S, g.dataset.chips, c.dataset.val);
+  if (g.dataset.chips === "brief.durasi") S.brief.durasi = Number(c.dataset.val);
+  if (g.dataset.chips === "brief.omniVer") fixDuration();
+  afterChange();
+}));
+
+Object.entries(SUGG).forEach(([path, list]) => {
+  const g = document.querySelector(`.sugg[data-for="${path}"]`); if (!g) return;
+  list.forEach(text => {
+    const b = document.createElement("button"); b.type = "button"; b.textContent = text;
+    b.onclick = () => {
+      playClick();
+      const cur = String(getPath(S, path) || "").trim();
+      setPath(S, path, cur === text ? "" : text);
+      afterChange();
+    };
+    g.appendChild(b);
+  });
+});
+
+$("timelineBtn").onclick = () => {
+  playClick();
+  const d = Number(S.brief.durasi) || 10;
+  const examples = [
+    "senyum ke kamera sambil pegang produk dekat dada",
+    "tunjukkan label produk ke arah lensa dan jelaskan keunggulannya",
+    "angguk yakin sambil tersenyum menutup pembicaraan"
+  ];
+  const frame = beats(d).map(([a, z], idx) => `${a}–${z} detik: (${examples[idx] || "lanjutkan aksi natural"})`).join("\n");
+  S.brief.susunan = S.brief.susunan.trim() ? S.brief.susunan.trim() + "\n" + frame : frame;
+  afterChange(); $("bSusunan").focus();
+};
+
+document.querySelectorAll(".step-tab").forEach(t => t.onclick = () => { playClick(); goStep(Number(t.dataset.step)); });
+document.querySelectorAll("[data-go]").forEach(b => b.addEventListener("click", () => { playClick(); goStep(Number(b.dataset.go)); }));
+document.querySelectorAll("#ffModeChips .chip").forEach(c => c.onclick = () => { playClick(); S.ff.mode = c.dataset.mode; afterChange(); });
+
+FF_FIXES.forEach(fix => {
+  const b = document.createElement("button"); b.type = "button"; b.textContent = fix.split(" — ")[0];
+  b.onclick = () => { playClick(); $("ffRevision").value = fix; renderStep2(); };
+  $("ffFixes").appendChild(b);
+});
+PROMPT_FIXES.forEach(fix => {
+  const b = document.createElement("button"); b.type = "button"; b.textContent = fix.split(" — ")[0];
+  b.onclick = () => { playClick(); $("pRevision").value = fix.split(" — ")[1]; renderStep3(); };
+  $("pFixes").appendChild(b);
+});
+$("ffRevision").addEventListener("input", renderStep2);
+$("pRevision").addEventListener("input", renderStep3);
+
+$("lockBtn").onclick = () => { playClick(); runLock(false); };
+$("saveCardBtn").onclick = () => { playClick(); saveCard(); };
+$("saveStyleBtn").onclick = async (e) => { playClick(); const btn = e.currentTarget; const ok = await saveCard(); if (ok) flashBtn(btn, "Pengaturan disimpan ke Kartu!"); };
+$("deleteCardBtn").onclick = () => { playClick(); deleteCard(); };
+$("exportBtn").onclick = () => { playClick(); exportCard(); };
+$("importBtn").onclick = () => { playClick(); $("importInput").click(); };
+$("importInput").addEventListener("change", (e) => { const f = e.target.files && e.target.files[0]; e.target.value = ""; if (f) importCards(f); });
+
+$("ffGenBtn").onclick = () => { playClick(); ffGenerate("new"); };
+$("ffRegenBtn").onclick = () => { playClick(); ffGenerate("regen"); };
+$("ffReviseBtn").onclick = () => { playClick(); ffGenerate("revise"); };
+$("ffDlBtn").onclick = async () => { playClick(); const s = firstFrame(); if (s) saveBlob(await (await fetch(s)).blob(), `First_Frame_${safeName(S.card.name)}.${extOf(s)}`); };
+
+$("p3UploadBtn").onclick = () => { playClick(); pickImage(v => { S.ff.uploaded = v; S.ff.mode = "upload"; }, 2048, 0.92); };
+
+$("promptBtn").onclick = () => { playClick(); runPrompt(false); };
+$("pReviseBtn").onclick = () => { playClick(); runPrompt(true); };
+$("copyPromptBtn").onclick = (e) => { playClick(); const o = S.out.versions[S.out.active]; if (o) { copyText(o.prompt); flashBtn(e.currentTarget, "Tersalin!"); } };
+$("nextShotBtn").onclick = () => { playClick(); nextShot(); };
+$("resetBtn").onclick = () => { playClick(); resetSession(); };
+
+["ffImg", "p3FFImg"].forEach(id => $(id).onclick = () => { $("lightboxImg").src = $(id).src; $("lightbox").hidden = false; });
+$("lightbox").onclick = () => { $("lightbox").hidden = true; };
+document.addEventListener("keydown", (e) => { if (e.key === "Escape") $("lightbox").hidden = true; });
+
+// ───────────────────────── MULAI ─────────────────────────
+(async () => {
+  renderAll();
+  try {
+    const saved = await store.get("cards");
+    if (Array.isArray(saved)) cards = saved;
+    const d = await store.get("draft");
+    if (d && typeof d === "object") {
+      const f = freshState();
+      S = { ...f, ...d, card: { ...f.card, ...(d.card || {}) }, product: { ...f.product, ...(d.product || {}) }, loc: { ...f.loc, ...(d.loc || {}) },
+            ff: { ...f.ff, ...(d.ff || {}) }, brief: { ...f.brief, ...(d.brief || {}) }, out: { ...f.out, ...(d.out || {}) }, shots: d.shots || [] };
+      S.brief.model = "Google Flow";
+      if (S.brief.bahasa !== "EN") S.brief.bahasa = "ID";
+      if (!CAM_MODES[S.ff.camMode]) S.ff.camMode = "Handheld selfie";
+      fixDuration();
+      const oldBp = S.card.blueprints || [];
+      S.card.blueprints = oldBp.length === 5 ? [oldBp[0] || null, oldBp[3] || null] : padBP(oldBp);
+      S.product.photos = (S.product.photos || []).slice(0, 2);
+      while (S.product.photos.length < 2) S.product.photos.push(null);
+    } else if (cards.length) {
+      loadCard(cards[cards.length - 1].id);
+    }
+  } catch (e) {}
+  renderAll();
+})();
+if (!IN_CANVAS) $("canvasWarn").hidden = false;
+</script>
+</body>
+</html>
